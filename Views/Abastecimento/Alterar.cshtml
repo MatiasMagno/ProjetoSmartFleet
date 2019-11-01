@@ -1,0 +1,105 @@
+@model  SmartFleet.Domain.ViewModel.Abastecimento
+@{
+    ViewBag.Title = "Alterar Abastecimento";
+    ViewBag.Current = " Cadastro / <a href='/Abastecimento/Pesquisar'>Abastecimento</a> / Alterar";
+}
+
+@using (Html.BeginForm("Alterar", "Abastecimento", FormMethod.Post, new { @class = "form", @role = "form" }))
+{
+    <section class="panel panel-default">
+        <article class="panel-body">
+            @Html.HiddenFor(x => x.IdeAbastecimento)            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdePessoaJuridica, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdePessoaJuridica"
+                                name="IdePessoaJuridica"
+                                asp-for="IdePessoaJuridica" 
+                                asp-items="ViewBag.PostoAbastecimento">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdePessoaJuridica)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatAbastecimento, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DatAbastecimento, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_end_date = DateTime.Now.Date,
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                        @Html.ValidationMessageFor(x => x.DatAbastecimento)
+                    </div>
+                </div>               
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeVeiculo, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdeVeiculo"
+                                name="IdeVeiculo"
+                                asp-for="IdeVeiculo" 
+                                asp-items="ViewBag.Veiculo">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeVeiculo)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeTipoCombustivel, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdeTipoCombustivel"
+                                name="IdeTipoCombustivel"
+                                onchange="abastecimento.onTipoCombustivel(this)"
+                                asp-for="IdeTipoCombustivel" 
+                                asp-items="ViewBag.TipoCombustivel">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdePessoaJuridica)
+                    </div>
+                </div> 
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.QtdAbastecimento , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.QtdAbastecimento, new { @class = "form-control abastecimento" })
+                        @Html.ValidationMessageFor(x => x.QtdAbastecimento)
+                    </div>
+                </div>
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.VlrAbastecimento , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.VlrAbastecimento, new { @class = "form-control money2", @maxlength="16" })
+                        @Html.ValidationMessageFor(x => x.VlrAbastecimento)
+                    </div>
+                </div>                                   
+            </div>
+        </article>
+         <footer class="panel-footer">
+            <button type="button" class="btn btn-primary submitForm" data-loading="false"><i class="fa fa-save"></i> Salvar</button>
+            <a href=@Url.Action("Pesquisar", "Abastecimento") class="btn btn-default"><i class="fa fa-close"></i> Cancelar</a>
+        </footer> 
+    </section>
+}
+
+@section customsJs 
+{
+    <script type="text/javascript">
+        var tipoCombustivel = $("#IdeTipoCombustivel");
+        abastecimento.onTipoCombustivel(tipoCombustivel);
+    </script>
+}

@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Erro";
+}
+
+<form> 
+    <section class="panel panel-default">
+        <article class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <h2 class="text-danger">Ocorreu um erro inesperado na aplicação.</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <h3><strong>Detalhe do erro:</strong></h3>
+                        <br>
+                        <p>
+                            @ViewBag.ErrorMessage;    
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+        </article>
+    </section>
+</form>

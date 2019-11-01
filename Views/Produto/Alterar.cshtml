@@ -1,0 +1,36 @@
+@model  SmartFleet.Domain.ViewModel.Produto
+@{
+    ViewBag.Title = "Alterar Produto";
+    ViewBag.Current = " Cadastro / <a href='/Produto/Pesquisar'>Produto</a> / Alterar";
+}
+
+@using (Html.BeginForm("Incluir", "Produto", FormMethod.Post, new { @class = "form", @role = "form" }))
+{
+    <section class="panel panel-default">
+        <article class="panel-body">
+            @Html.HiddenFor(x => x.IdeProduto)
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.CodProduto, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.CodProduto, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.CodProduto)
+                    </div>
+                </div>             
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomProduto, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NomProduto, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NomProduto )
+                    </div>
+                </div>                 
+            </div>      
+        </article>
+         <footer class="panel-footer">
+            <button type="button" class="btn btn-primary submitForm" data-loading="false"><i class="fa fa-save"></i> Salvar</button>
+            <a href=@Url.Action("Pesquisar", "Produto") class="btn btn-default"><i class="fa fa-close"></i> Cancelar</a>
+        </footer> 
+    </section>
+}
+
+

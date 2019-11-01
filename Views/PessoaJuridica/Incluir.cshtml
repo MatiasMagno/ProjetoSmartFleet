@@ -1,0 +1,110 @@
+@model  SmartFleet.Domain.ViewModel.PessoaJuridica
+@{
+    ViewBag.Title = "Incluir Pessoa Jurídica";
+    ViewBag.Current = " Cadastro / <a href='/PessoaJuridica/Pesquisar'>Pessoa Jurídica</a> / Incluir";
+}
+
+@using (Html.BeginForm("Incluir", "PessoaJuridica", FormMethod.Post, new { @class = "form", @role = "form" }))
+{
+    <section class="panel panel-default">
+        <article class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomRazaoSocial, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NomRazaoSocial, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NomRazaoSocial)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomFantasia, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NomFantasia, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NomFantasia)
+                    </div>
+                </div>               
+            </div>
+            <div class="row">               
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumCNPJ, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumCNPJ, new { @class = "form-control cnpj" })
+                        @Html.ValidationMessageFor(x => x.NumCNPJ)
+                    </div>
+                </div>                  
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumInscricaoEstadual, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumInscricaoEstadual, new { @class = "form-control only-number" })
+                    </div>
+                </div> 
+                 <div class="col-md-2">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumTelefone , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumTelefone, new { @class = "form-control phone-home-mask", @placeholder = "(__) ____-____" })
+                    </div>
+                </div>  
+                 <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscEmail , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DscEmail, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.DscEmail)
+                    </div>
+                </div> 
+            </div>
+            <div class="row">
+                 <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscLogradouro , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DscLogradouro, new { @class = "form-control" })
+                    </div>
+                </div>   
+                 <div class="col-md-1">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumLogradouro , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumLogradouro, new { @class = "form-control only-number" })
+                    </div>
+                </div>                              
+                 <div class="col-md-5">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomBairro , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NomBairro, new { @class = "form-control" })
+                    </div>
+                </div> 
+            </div>
+            <div class="row"> 
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomCidade , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NomCidade, new { @class = "form-control" })
+                    </div>
+                </div>      
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumCEP , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumCEP, new { @class = "form-control zipcode" })
+                    </div>
+                </div>                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeUFEndereco , new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdeUFEndereco"
+                                name="IdeUFEndereco"
+                                asp-for="IdeUFEndereco" 
+                                asp-items="ViewBag.UnidadeFederacao">
+                            <option value="">Selecione</option>
+                        </select> 
+                    </div>
+                </div> 
+            </div>
+        </article>
+         <footer class="panel-footer">
+            <button type="button" class="btn btn-primary submitForm" data-loading="false"><i class="fa fa-save"></i> Salvar</button>
+            <a href=@Url.Action("Pesquisar", "PessoaJuridica") class="btn btn-default"><i class="fa fa-close"></i> Cancelar</a>
+        </footer> 
+    </section>
+}
+
+
+

@@ -1,0 +1,90 @@
+@model SmartFleet.Domain.ViewModel.Aluguel;
+@{
+    ViewBag.Title = "Pesquisar Aluguel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Current = " Cadastro / Aluguel / Pesquisar";
+}
+
+<form id="formPesquisar" class="form" role="form">
+    <section class="panel panel-default">
+        <article class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdePessoaJuridica, new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdePessoaJuridica"
+                                name="IdePessoaJuridica"
+                                asp-for="IdePessoaJuridica" 
+                                asp-items="ViewBag.Locadora">
+                            <option value="">Selecione</option>
+                        </select> 
+                    </div>
+                </div>                
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DthSolicitacaoInicio, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DthSolicitacaoInicio, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_end_date = DateTime.Now.Date,
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>                
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DthSolicitacaoFim, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DthSolicitacaoFim, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_end_date = DateTime.Now.Date,
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>                  
+            </div>
+        </article>
+        <footer class="panel-footer">
+            <button type="button" class="btn btn-primary btnPesquisar"><i class="fa fa-search"></i> Pesquisar</button>
+            <button type="button" class="btn btn-default btn-reset-form" data-loading="false"><i class="fa fa-eraser"></i> Limpar</button>
+            <a href=@Url.Action("Incluir", "Aluguel") class="btn btn-default"><i class="fa fa-plus-circle"></i> Incluir</a>
+        </footer>
+    </section>
+</form>
+
+<!--Datatable Pesquisar-->
+<form id="form-result" class="form" role="form">
+    <div class="panel panel-default hide datatable table-responsive">
+        <table id="gridResultado"
+               class="table table-striped b-t b-light table-bordered table-hover datatable"
+               data-crud="true"
+               data-form-id="formPesquisar"
+               data-object-id="ideAluguel"
+               data-controller="Aluguel"
+               data-columns-data="pessoaJuridica.nomRazaoSocial,dscVeiculo,dthSolicitacao,dthDevolucao"
+               data-columns-title="Locadora de Veículo,Veículo,Data da Solicitação,Data da Devolução">
+        </table>
+    </div>
+</form>
+
+@section customsJs {
+    <script type="text/javascript">
+        var validator = $( "#formPesquisar" ).validate();
+        validator.resetForm();
+    </script>
+}

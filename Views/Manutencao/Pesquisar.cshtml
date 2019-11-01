@@ -1,0 +1,43 @@
+@model SmartFleet.Domain.ViewModel.Manutencao;
+@{
+    ViewBag.Title = "Pesquisar Manutenção de Veículo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Current = " Cadastro / Manutenção de Veículo / Pesquisar";
+}
+
+<form id="formPesquisar" class="form" role="form">
+    <section class="panel panel-default">
+        <article class="panel-body">
+            <div class="row">
+
+            </div>
+        </article>
+        <footer class="panel-footer">
+            <button type="button" class="btn btn-primary btnPesquisar"><i class="fa fa-search"></i> Pesquisar</button>
+            <button type="button" class="btn btn-default btn-reset-form" data-loading="false"><i class="fa fa-eraser"></i> Limpar</button>
+            <a href=@Url.Action("Incluir", "Manutencao") class="btn btn-default"><i class="fa fa-plus-circle"></i> Incluir</a>
+        </footer>
+    </section>
+</form>
+
+<!--Datatable Pesquisar-->
+<form id="form-result" class="form" role="form">
+    <div class="panel panel-default hide datatable table-responsive">
+        <table id="gridResultado"
+               class="table table-striped b-t b-light table-bordered table-hover datatable"
+               data-crud="true"
+               data-form-id="formPesquisar"
+               data-object-id="ideManutencao"
+               data-controller="Manutencao"
+               data-columns-data="ideManutencao"
+               data-columns-title="IdeManutenção">
+        </table>
+    </div>
+</form>
+
+@section customsJs {
+    <script type="text/javascript">
+        var validator = $( "#formPesquisar" ).validate();
+        validator.resetForm();
+    </script>
+}

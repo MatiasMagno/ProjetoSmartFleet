@@ -1,0 +1,77 @@
+@model  SmartFleet.Domain.ViewModel.Aluguel
+@{
+    ViewBag.Title = "Alterar Aluguel";
+    ViewBag.Current = " Cadastro / <a href='/Aluguel/Pesquisar'>Aluguel</a> / Incluir";
+}
+
+@using (Html.BeginForm("Alterar", "Aluguel", FormMethod.Post, new { @class = "form", @role = "form" }))
+{
+    <section class="panel panel-default">
+        <article class="panel-body">
+            @Html.HiddenFor(x => x.IdeAluguel) 
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdePessoaJuridica, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdePessoaJuridica"
+                                name="IdePessoaJuridica"
+                                asp-for="IdePessoaJuridica" 
+                                asp-items="ViewBag.locadora">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdePessoaJuridica)
+                    </div>
+                </div> 
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscVeiculo, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DscVeiculo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.DscVeiculo)
+                    </div>
+                </div>                                 
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DthSolicitacao, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DthSolicitacao, null, new { @class = "form-control onlyNumber datetime-picker" })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                        @Html.ValidationMessageFor(x => x.DthSolicitacao)
+                    </div>
+                </div> 
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DthDevolucao, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DthDevolucao, null, new { @class = "form-control onlyNumber datetime-picker" })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>              
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumNotaFiscal, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumNotaFiscal, new { @class = "form-control only-number", @maxlength="15" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.VrlNotaFiscal, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.VrlNotaFiscal, new { @class = "form-control money2", @maxlength="16" })
+                    </div>
+                </div>                                
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscObservacao, new { @class = "control-label" })
+                        @Html.TextAreaFor(x => x.DscObservacao, new { @class = "form-control", @rows=3 })
+                    </div>
+                </div>                        
+            </div>
+        </article>
+         <footer class="panel-footer">
+            <button type="button" class="btn btn-primary submitForm" data-loading="false"><i class="fa fa-save"></i> Salvar</button>
+            <a href=@Url.Action("Pesquisar", "Aluguel") class="btn btn-default"><i class="fa fa-close"></i> Cancelar</a>
+        </footer> 
+    </section>
+}

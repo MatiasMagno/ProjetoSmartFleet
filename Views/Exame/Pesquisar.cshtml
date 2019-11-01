@@ -1,0 +1,118 @@
+@model SmartFleet.Domain.ViewModel.Exame;
+@{
+    ViewBag.Title = "Pesquisar Exame";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Current = " Cadastro / Exame / Pesquisar";
+}
+
+<form id="formPesquisar" class="form" role="form">
+    <section class="panel panel-default">
+        <article class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeColaborador, new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdeColaborador"
+                                name="IdeColaborador"
+                                asp-for="IdeColaborador" 
+                                asp-items="ViewBag.Colaborador">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeColaborador)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeLaboratorio, new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdeLaboratorio"
+                                name="IdeLaboratorio"
+                                asp-for="IdeLaboratorio" 
+                                asp-items="ViewBag.Laboratorio">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeLaboratorio)
+                    </div>
+                </div>                                  
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomMedico, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NomMedico, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NomMedico)
+                    </div>
+                </div>                  
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumCRMMedico, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumCRMMedico, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NumCRMMedico)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatExameInicial, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DatExameInicial, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatExameFinal, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DatExameFinal, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>                                                     
+            </div>
+        </article>
+        <footer class="panel-footer">
+            <button type="button" class="btn btn-primary btnPesquisar"><i class="fa fa-search"></i> Pesquisar</button>
+            <button type="button" class="btn btn-default btn-reset-form" data-loading="false"><i class="fa fa-eraser"></i> Limpar</button>
+            <a href=@Url.Action("Incluir", "Exame") class="btn btn-default"><i class="fa fa-plus-circle"></i> Incluir</a>
+        </footer>
+    </section>
+</form>
+
+<!--Datatable Pesquisar-->
+<form id="form-result" class="form" role="form">
+    <div class="panel panel-default hide datatable table-responsive">
+        <table id="gridExame"
+               class="table table-striped b-t b-light table-bordered table-hover datatable"
+               data-crud="true"
+               data-form-id="formPesquisar"
+               data-object-id="ideExame"
+               data-controller="Exame"
+               data-columns-data="colaborador.nomColaborador,laboratorio.nomRazaoSocial,datExame,nomMedico,numCRMMedico"
+               data-columns-title="Motorista,Laboratório,Data do Exame,Nome do Médico Revisor,CRM do Médico Revisor">
+        </table>
+    </div>
+</form>
+
+@section customsJs {
+    <script type="text/javascript">
+        var validator = $( "#formPesquisar" ).validate();
+        validator.resetForm();
+    </script>
+}

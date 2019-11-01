@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+
+<html class="app no-js" lang="pt-br" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <meta name="viewport" content="width=device-width; initial-scale=2">
+
+    <title>@ViewData["Title"] - SmartFleet</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/vendor.css" />
+        <link rel="stylesheet" href="~/css/main.css" />
+        <link rel="stylesheet" href="~/css/vendor/datatables/css/dataTables.bootstrap.css" />
+        <link rel="stylesheet" href="~/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="~/css/customs.css" />
+        <!-- <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" /> -->
+    </environment>
+    <!-- <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+    </environment> -->
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <section class="vbox">
+        <header class="header header-md navbar navbar-fixed-top-xs box-shadow">
+            <div class="navbar-header aside-md" style="background-color:#2B5ADC">
+                <a class="btn btn-link visible-xs" data-loading="false" data-toggle-class="nav-off-screen" data-target="#nav">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <a class="navbar-brand text-center">
+                    <figure class="inline">
+                        <img src="~/images/Smartfleet.png" alt="@ViewBag.Title" />
+                    </figure>
+                </a>
+                <a class="btn btn-link visible-xs" data-loading="false" data-toggle="dropdown" data-target=".user">
+                    <i class="fa fa-cog"></i>
+                </a>
+            </div>
+            <ul class="nav navbar-nav hidden-xs">
+                <li>
+                    <a id="perfilLogado"><i class="i i-book"></i>  Sistema de Gestão de Frotas</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right hidden-xs nav-user user">
+
+                <li class="hidden-sm hidden-md">  
+                     <a> Versão 1.1.1.0</a>                   
+                </li>
+                <li class="hidden-sm">
+                     <partial name="accessibility" />
+                </li>
+                <li class="hidden-sm hidden-md" data-toggle="tooltip" data-placement="bottom" title="Maximizar/Minimizar Tela">
+                    <a href="#" onclick="FullScreenToggle()"><i class="fa fa-expand" id="fs-toggle"></i></a>
+                </li>
+                <li>
+                    <a href="~/MinhaConta/Sair" id="s3a_Btn_Sair"><span class="hidden-sm">Sair</span> <i class="i i-logout"></i></a>
+                </li>
+            </ul>
+        </header>
+        <section class="scrollable">
+            <section class="hbox stretch">
+                <aside class="bg-white aside-md hidden-print" id="nav">
+                    <section class="vbox">
+                        <section class="w-f scrollable">
+                            <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0" data-size="10px" data-railopacity="0.2">
+                                <partial name="nav_profile" />
+                                <partial name="nav_main" />
+                            </div>
+                        </section>
+                        <partial name="footer" />                        
+                    </section>
+                </aside>
+                <section id="content">
+                    <section class="hbox stretch">
+                        <section>
+                            <section class="vbox">
+                                <section class="scrollable">
+                                    <div class="slim-scroll padder-h" data-height="auto" data-disable-fade-out="true" data-distance="0" data-size="10px" data-railopacity="0.2">
+                                        <div class="row m-b-md">
+                                            <div class="col-sm-12">
+                                                <h1 class="m-b-xs text-black">@ViewBag.Title</h1>
+
+                                                <ol class="breadcrumb">
+                                                    <li><a href="@Url.Action("Index", "Home")">Início</a> / @Html.Raw(ViewBag.Current)</li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                @RenderBody()
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
+                    <a href="#" class="hide nav-off-screen-block" data-toggle-class="nav-off-screen" data-target="#nav"></a>
+                </section>
+            </section>
+        </section>
+    </section>
+    <div class="loading">
+        <div class="message">
+            <div class="text-center">
+                <div class="block m-b">
+                    <i class="fa fa-spinner fa-5x fa-spin"></i>
+                </div>
+                <h3>Carregando...</h3>
+            </div>
+        </div>
+    </div>
+
+    <environment include="Development">
+        <!-- <script src="~/js/vendor.min.js" charset="UTF-8"></script>
+
+        <script src="~/js/vendor/jquery.validate.min.js" class="validateJs"></script>
+        <script src="~/js/vendor/jquery.unobtrusive-ajax.min.js"></script>
+        <script src="~/js/vendor/jquery.validate.unobtrusive.min.js" class="validateJs"></script>
+
+        <script src="~/js/main.js" charset="UTF-8"></script>
+        <script src="~/js/customs.js" charset="UTF-8"></script>
+        <script src="~/js/vendor/datatables/jquery.dataTables.js"></script>
+        <script src="~/js/vendor/datatables/dataTables.bootstrap.js"></script>       
+        <script src="~/js/extensions.js" charset="UTF-8"></script> -->
+
+    <script src="~/js/vendor/modernizr.js" charset="UTF-8"></script>
+    <script src="~/js/vendor.js" charset="UTF-8"></script>
+    <script src="~/js/vendor/jquery.validate.min.js" class="validateJs"></script>
+    <script src="~/js/vendor/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/js/vendor/jquery.validate.unobtrusive.min.js" class="validateJs"></script>
+
+    <script type="text/javascript" src="~/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="~/js/locales/bootstrap-datetimepicker.pt-BR.js" charset="UTF-8"></script>    
+
+    <script src="~/js/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="~/js/vendor/datatables/dataTables.bootstrap.js"></script>
+
+    <script src="~/js/main.js" charset="UTF-8"></script>
+    <script src="~/js/customs.js" charset="UTF-8"></script>
+    <script src="~/js/globalize.js" charset="UTF-8"></script>
+    <script src="~/js/globalize.culture.pt-BR.js" charset="UTF-8"></script>
+    <script src="~/js/jquery.validate.globalize.min.js" charset="UTF-8"></script>
+
+    <script src="~/js/extensions.js"></script>
+
+        <!-- <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script> -->
+    </environment>
+    <!-- <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
+        </script>
+    </environment> -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/smartfleet.js" charset="UTF-8"></script>
+
+    <!-- Setup -->
+    <script>
+        Globalize.cultureSelector = 'pt-BR';
+        $.validator.setDefaults({ ignore: ".ignore, .tt-hint"});
+    </script>
+
+    <!-- Sistema -->
+    @RenderSection("customsJs", false)
+
+    @{
+        var classHeader = "bg-info";     
+        <script type="text/javascript">
+            var header = $(".header");
+            var obj = $(header).attr("class");
+            var className = obj.split(" ")[0];
+            var objNew = obj.replace(className, "@classHeader");
+
+            $(header).removeClass();
+            $(header).addClass(objNew);
+        </script>
+
+        }
+    }
+
+    @RenderSection("Scripts", required: false)
+
+    @{
+        // Mensagem de retorno do Controller
+        if (TempData["MensagemRetorno"] != null)
+        {
+            var msg = TempData["MensagemRetorno"];
+            <script type="text/javascript">
+                var strMsg = "@msg";
+                var jsonMsg = strMsg.replace(/&#x27;/gi, '"');
+                var msg = JSON.parse(jsonMsg);
+                app.callMsg(msg);
+            </script>  
+        }
+    }
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+@model SmartFleet.Domain.ViewModel.PessoaJuridica;
+@{
+    ViewBag.Title = "Pesquisar Pessoa Jurídica";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Current = " Cadastro / Pessoa Jurídica / Pesquisar";
+}
+
+<form id="formPesquisar" class="form" role="form">
+    <section class="panel panel-default">
+        <article class="panel-body">
+            <div class="row">
+                 <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomRazaoSocial, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NomRazaoSocial, new { @class = "form-control" })
+                    </div>
+                </div>               
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomFantasia , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NomFantasia, new { @class = "form-control"})
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumCNPJ , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumCNPJ, new { @class = "form-control cnpj" })
+                    </div>
+                </div>           
+            </div>
+        </article>
+        <footer class="panel-footer">
+            <button type="button" class="btn btn-primary btnPesquisar"><i class="fa fa-search"></i> Pesquisar</button>
+            <button type="button" class="btn btn-default btn-reset-form" data-loading="false"><i class="fa fa-eraser"></i> Limpar</button>
+            <a href=@Url.Action("Incluir", "PessoaJuridica") class="btn btn-default"><i class="fa fa-plus-circle"></i> Incluir</a>
+        </footer>
+    </section>
+</form>
+
+<!--Datatable Pesquisar-->
+<form id="form-result" class="form" role="form">
+    <div class="panel panel-default hide datatable table-responsive">
+        <table id="gridPessoaJuridica"
+               class="table table-striped b-t b-light table-bordered table-hover datatable"
+               data-crud="true"
+               data-form-id="formPesquisar"
+               data-object-id="idePessoaJuridica"
+               data-controller="PessoaJuridica"
+               data-columns-data="nomRazaoSocial,nomFantasia,numCNPJ"
+               data-columns-title="Razão Social,Nome Fantasia,CNPJ">
+        </table>
+    </div>
+</form>
+
+@section customsJs {
+    <script type="text/javascript">
+        var validator = $( "#formPesquisar" ).validate();
+        validator.resetForm();
+
+        $('.form_datetime').datetimepicker({
+            language:  'pt-BR',
+            format: 'dd/mm/yyyy hh:ii',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+
+        $('.form_datetime').mask("99/99/9999 99:99");
+
+
+    </script>
+}

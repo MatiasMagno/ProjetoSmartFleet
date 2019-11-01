@@ -1,0 +1,112 @@
+@model  SmartFleet.Domain.ViewModel.Multa
+@{
+    ViewBag.Title = "Incluir Multa";
+    ViewBag.Current = " Cadastro / <a href='/Multa/Pesquisar'>Multa</a> / Incluir";
+}
+
+@using (Html.BeginForm("Incluir", "Multa", FormMethod.Post, new { @class = "form", @role = "form" }))
+{
+    <section class="panel panel-default">
+        <article class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeVeiculo, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdeVeiculo"
+                                name="IdeVeiculo"
+                                asp-for="IdeVeiculo" 
+                                asp-items="ViewBag.Veiculo">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeVeiculo)
+                    </div>
+                </div>                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumAutoInfracao, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumAutoInfracao, new { @class = "form-control only-number" })
+                        @Html.ValidationMessageFor(x => x.NumAutoInfracao)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumPontuacao, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumPontuacao, new { @class = "form-control only-number", @maxlength="3" })
+                    </div>
+                </div> 
+            </div>            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscInfracao , new { @class = "control-label required" })
+                        @Html.TextAreaFor(x => x.DscInfracao, new { @class = "form-control", @rows = 3 })
+                        @Html.ValidationMessageFor(x => x.DscInfracao)
+                    </div>
+                </div>
+                 <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscLocalInfracao, new { @class = "control-label required" })
+                        @Html.TextAreaFor(x => x.DscLocalInfracao, new { @class = "form-control", @rows = 3 })
+                        @Html.ValidationMessageFor(x => x.DscLocalInfracao)
+                    </div>
+                </div>                          
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatInfracao, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DatInfracao, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                        @Html.ValidationMessageFor(x => x.DatInfracao)
+                    </div>
+                </div>                  
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatVencimento, new { @class = "control-label required" })
+                        @Html.TextBoxFor(m => m.DatVencimento, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                        @Html.ValidationMessageFor(x => x.DatVencimento)
+                    </div>
+                </div>  
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.VlrAutuacao , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.VlrAutuacao, new { @class = "form-control money2", @maxlength="16" })
+                        @Html.ValidationMessageFor(x => x.VlrAutuacao)
+                    </div>
+                </div>
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.VlrDesconto , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.VlrDesconto, new { @class = "form-control money2", @maxlength="16" })
+                    </div>
+                </div>                                                
+            </div>         
+        </article>
+         <footer class="panel-footer">
+            <button type="button" class="btn btn-primary submitForm" data-loading="false"><i class="fa fa-save"></i> Salvar</button>
+            <a href=@Url.Action("Pesquisar", "Multa") class="btn btn-default"><i class="fa fa-close"></i> Cancelar</a>
+        </footer> 
+    </section>
+}

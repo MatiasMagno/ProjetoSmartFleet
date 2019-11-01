@@ -1,0 +1,111 @@
+@model  SmartFleet.Domain.ViewModel.Exame
+@{
+    ViewBag.Title = "Alterar Exame Médico";
+    ViewBag.Current = " Cadastro / <a href='/Exame/Pesquisar'>Exame</a> / Alterar";
+}
+
+@using (Html.BeginForm("Alterar", "Exame", FormMethod.Post, new { @class = "form", @role = "form" }))
+{
+    <section class="panel panel-default">
+        <article class="panel-body">
+            @Html.HiddenFor(x => x.IdeExame)
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeColaborador, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdeColaborador"
+                                name="IdeColaborador"
+                                asp-for="IdeColaborador" 
+                                asp-items="ViewBag.Colaborador">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeColaborador)
+                    </div>
+                </div>           
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeLaboratorio, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdeLaboratorio"
+                                name="IdeLaboratorio"
+                                asp-for="IdeLaboratorio" 
+                                asp-items="ViewBag.Laboratorio">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeLaboratorio)
+                    </div>
+                </div>                  
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatExame, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DatExame, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                        @Html.ValidationMessageFor(x => x.DatExame)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.CodExame , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.CodExame, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.CodExame)
+                    </div>
+                </div>                                
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomMedico, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NomMedico, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NomMedico)
+                    </div>
+                </div>                  
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumCRMMedico, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumCRMMedico, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NumCRMMedico)
+                    </div>
+                </div>                  
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeUFCRMMedico , new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdeUFCRMMedico"
+                                name="IdeUFCRMMedico"
+                                asp-for="IdeUFCRMMedico" 
+                                asp-items="ViewBag.UFCRMMedico">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeUFCRMMedico)
+                    </div>
+                </div>                   
+            </div>
+            <div class="row">
+                 <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscObservacao , new { @class = "control-label" })
+                        @Html.TextAreaFor(x => x.DscObservacao, new { @class = "form-control textarea-not-enter", @rows = 3 })
+                        @Html.ValidationMessageFor(x => x.DscObservacao)
+                    </div>
+                </div>                
+            </div>
+        </article>
+         <footer class="panel-footer">
+            <button type="button" class="btn btn-primary submitForm" data-loading="false"><i class="fa fa-save"></i> Salvar</button>
+            <a href=@Url.Action("Pesquisar", "Exame") class="btn btn-default"><i class="fa fa-close"></i> Cancelar</a>
+        </footer> 
+    </section>
+}

@@ -1,0 +1,145 @@
+@model  SmartFleet.Domain.ViewModel.Sinistro
+@{
+    ViewBag.Title = "Alterar Sinistro";
+    ViewBag.Current = " Cadastro / <a href='/Sinistro/Pesquisar'>Sinistro</a> / Alterar";
+}
+
+@using (Html.BeginForm("Alterar", "Sinistro", FormMethod.Post, new { @class = "form", @role = "form" }))
+{
+    <section class="panel panel-default">
+        <article class="panel-body">
+            @Html.HiddenFor(x => x.IdeSinistro)
+            @Html.HiddenFor(x => x.IdeSeguro)
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdcTipoSinistro, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdcTipoSinistro"
+                                name="IdcTipoSinistro"
+                                asp-for="IdcTipoSinistro" 
+                                asp-items="ViewBag.TipoSinistro">
+                            <option value="">Selecione</option>
+                        </select>
+                        @Html.ValidationMessageFor(x => x.IdcTipoSinistro) 
+                    </div>
+                </div> 
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatOcorrencia, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DatOcorrencia, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_end_date = DateTime.Now.Date,
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                        @Html.ValidationMessageFor(x => x.DatOcorrencia)
+                    </div>
+                </div>                                       
+            </div>
+            <div class="row"> 
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeVeiculo, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdeSeguro"
+                                name="IdeSeguro"
+                                onchange="sinistro.onchangeVeiculo(this)"
+                                asp-for="IdeSeguro" 
+                                asp-items="ViewBag.Seguro">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeSeguro)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.NumPlaca, new { @class = "control-label" })
+                            @Html.TextBoxFor(x => x.NumPlaca, new { @class = "form-control", @readonly="readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.CodRenavam, new { @class = "control-label" })
+                            @Html.TextBoxFor(x => x.CodRenavam , new { @class = "form-control", @readonly="readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumApolice, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumApolice , new { @class = "form-control", @readonly="readonly" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.VlrFranquia, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.VlrFranquia, new { @class = "form-control", @readonly="readonly" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DatVigenciaInicio, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DatVigenciaInicio, new { @class = "form-control", @readonly="readonly" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DatVigenciaFim, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DatVigenciaFim, new { @class = "form-control", @readonly="readonly" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomSeguradora, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NomSeguradora, new { @class = "form-control", @readonly="readonly" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumCNPJ, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumCNPJ, new { @class = "form-control", @readonly="readonly" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumTelefone, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumTelefone, null, new { @class = "form-control", @readonly="readonly" })
+                    </div>
+                </div>                                                         
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscObservacao , new { @class = "control-label" })
+                        @Html.TextAreaFor(x => x.DscObservacao, new { @class = "form-control", @rows = 3 })
+                    </div>
+                </div>                  
+            </div>
+        </article>
+         <footer class="panel-footer">
+            <button type="button" class="btn btn-primary submitForm" data-loading="false"><i class="fa fa-save"></i> Salvar</button>
+            <a href=@Url.Action("Pesquisar", "Sinistro") class="btn btn-default"><i class="fa fa-close"></i> Cancelar</a>
+        </footer> 
+    </section>
+}
+
+@section customsJs 
+{
+    <script type="text/javascript">
+        var seguro = $("#IdeSeguro");
+        sinistro.onchangeVeiculo(seguro)
+    </script>
+}

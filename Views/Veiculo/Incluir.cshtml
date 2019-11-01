@@ -1,0 +1,139 @@
+@model  SmartFleet.Domain.ViewModel.Veiculo
+@{
+    ViewBag.Title = "Incluir Veículo";
+    ViewBag.Current = " Cadastro / <a href='/Veiculo/Pesquisar'>Veículo</a> / Incluir";
+}
+
+@using (Html.BeginForm("Incluir", "Veiculo", FormMethod.Post, new { @class = "form", @role = "form" }))
+{
+    <section class="panel panel-default">
+        <article class="panel-body">
+            @Html.Hidden("IdcSituacao", "A")
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.CodRenavam , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.CodRenavam, new { @class = "form-control only-number" })
+                        @Html.ValidationMessageFor(x => x.CodRenavam)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumPlaca , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumPlaca, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NumPlaca)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumChassi, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumChassi, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NumChassi)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumKMInicial, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumKMInicial, new { @class = "form-control only-number", @maxlength="7" })
+                        @Html.ValidationMessageFor(x => x.NumKMInicial)
+                    </div>
+                </div>                             
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscTipo , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DscTipo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.DscTipo)
+                    </div>
+                </div>  
+                 <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscMarcaModelo , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DscMarcaModelo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.DscMarcaModelo)
+                    </div>
+                </div>                               
+            </div>
+            <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscCorPredominante, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DscCorPredominante, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.DscCorPredominante)
+                    </div>
+                </div>                 
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumAnoFab , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumAnoFab, new { @class = "form-control only-number" })
+                        @Html.ValidationMessageFor(x => x.NumAnoFab)
+                    </div>
+                </div> 
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumAnoMod , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumAnoMod, new { @class = "form-control only-number" })
+                        @Html.ValidationMessageFor(x => x.NumAnoMod)
+                    </div>
+                </div>             
+            </div>          
+            <div class="row">
+                <div class="col-md-12">
+                    @Html.Hidden("IdcGasolina", "N")
+                    @Html.Hidden("IdcEtanol", "N")
+                    @Html.Hidden("IdcDiesel", "N")
+                    @Html.Hidden("IdcBiodiesel", "N")
+                    @Html.Hidden("IdcEletrico", "N")
+                    @Html.Hidden("IdcGNV", "N")
+
+                    <label class="control-label">Tipo de Combustível</label>
+                    <div class="form-group">
+                        <div class="checkbox i-checks radio-inline">
+                            <label>
+                                @Html.TextBox("IdcGasolina1", null, new { @class = "tipo-combustivel", @type = "checkbox", @chave="IdcGasolina" })
+                                <i></i>Gasolina
+                            </label>
+                        </div>
+                        <div class="checkbox i-checks radio-inline">
+                            <label>
+                                @Html.TextBox("IdcEtanol1", null, new { @class = "tipo-combustivel", @type = "checkbox", @chave="IdcEtanol" })
+                                <i></i>Etanol
+                            </label>                        
+                        </div>
+                        <div class="checkbox i-checks radio-inline">
+                            <label>
+                                @Html.TextBox("IdcDiesel1", null, new { @class = "tipo-combustivel", @type = "checkbox", @chave="IdcDiesel" })
+                                <i></i>Diesel
+                            </label>                          
+                        </div>
+                        <div class="checkbox i-checks radio-inline">
+                            <label>
+                                @Html.TextBox("IdcBiodiesel1", null, new { @class = "tipo-combustivel", @type = "checkbox", @chave="IdcBiodiesel" })
+                                <i></i>Biodiesel                                
+                            </label>  
+                        </div>
+                        <div class="checkbox i-checks radio-inline">
+                            <label>
+                                @Html.TextBox("IdcEletrico1", null, new { @class = "tipo-combustivel", @type = "checkbox", @chave="IdcEletrico" })
+                                <i></i>Elétrico                                
+                            </label>  
+                        </div>
+                        <div class="checkbox i-checks radio-inline">
+                            <label>
+                                @Html.TextBox("IdcGNV1", null, new { @class = "tipo-combustivel", @type = "checkbox", @chave="IdcGNV" })
+                                <i></i>Gás Natural Veicular                                
+                            </label>
+                        </div>                        
+                    </div>
+                </div>
+            </div> 
+        </article>
+         <footer class="panel-footer">
+            <button type="button" class="btn btn-primary submitForm" data-loading="false"><i class="fa fa-save"></i> Salvar</button>
+            <a href=@Url.Action("Pesquisar", "Veiculo") class="btn btn-default"><i class="fa fa-close"></i> Cancelar</a>
+        </footer> 
+    </section>
+}
+
+

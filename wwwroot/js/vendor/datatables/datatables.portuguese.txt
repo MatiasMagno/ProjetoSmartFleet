@@ -1,0 +1,20 @@
+{
+    "sProcessing":   "<div><i class='fa fa-spinner fa-2x fa-spin'></i>&nbsp;&nbsp;Processando...</div>",
+    "sLengthMenu":   "Mostrar _MENU_ registos",
+    "sZeroRecords":  "Nenhum registro encontrado",
+    "sInfo":         "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+    "sInfoEmpty":    "Mostrando de 0 até 0 de 0 registros",
+    "sInfoFiltered": "",
+    "sInfoPostFix":  "",
+    "sSearch":       "Procurar:",
+    "sUrl":          "",
+    "oPaginate": {
+        "sFirst":    "Primeiro",
+        "sPrevious": "Anterior",
+        "sNext":     "Seguinte",
+        "sLast":     "Último"
+    }
+}
+
+
+    

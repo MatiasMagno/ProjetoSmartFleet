@@ -1,0 +1,72 @@
+@model SmartFleet.Domain.ViewModel.Colaborador;
+@{
+    ViewBag.Title = "Pesquisar Colaborador";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Current = " Cadastro / Colaborador / Pesquisar";
+}
+
+<form id="formPesquisar" class="form" role="form">
+    <section class="panel panel-default">
+        <article class="panel-body">
+            <div class="row">
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomColaborador, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NomColaborador, new { @class = "form-control" })
+                    </div>
+                </div>               
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumMatricula , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumMatricula, new { @class = "form-control"})
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumCPF , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumCPF, new { @class = "form-control cpf" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeTipoColaborador , new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdeTipoColaborador"
+                                name="IdeTipoColaborador"
+                                asp-for="IdeTipoColaborador" 
+                                asp-items="ViewBag.TipoColaborador">
+                            <option value="">Selecione</option>
+                        </select> 
+                    </div>
+                </div>                   
+            </div>
+        </article>
+        <footer class="panel-footer">
+            <button type="button" class="btn btn-primary btnPesquisar"><i class="fa fa-search"></i> Pesquisar</button>
+            <button type="button" class="btn btn-default btn-reset-form" data-loading="false"><i class="fa fa-eraser"></i> Limpar</button>
+            <a href=@Url.Action("Incluir", "Colaborador") class="btn btn-default"><i class="fa fa-plus-circle"></i> Incluir</a>
+        </footer>
+    </section>
+</form>
+
+<!--Datatable Pesquisar-->
+<form id="form-result" class="form" role="form">
+    <div class="panel panel-default hide datatable table-responsive">
+        <table id="gridColaborador"
+               class="table table-striped b-t b-light table-bordered table-hover datatable"
+               data-crud="true"
+               data-form-id="formPesquisar"
+               data-object-id="ideColaborador"
+               data-controller="Colaborador"
+               data-columns-data="nomColaborador,numMatricula,numCPF,dscTipoColaborador"
+               data-columns-title="Colaborador,Matrícula,CPF,Tipo do Colaborador">
+        </table>
+    </div>
+</form>
+
+@section customsJs {
+    <script type="text/javascript">
+        var validator = $( "#formPesquisar" ).validate();
+        validator.resetForm();
+    </script>
+}

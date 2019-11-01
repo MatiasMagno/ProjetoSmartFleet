@@ -1,0 +1,125 @@
+@model  SmartFleet.Domain.ViewModel.Seguro
+@{
+    ViewBag.Title = "Alterar Seguro";
+    ViewBag.Current = " Cadastro / <a href='/Seguro/Pesquisar'>Seguro</a> / Alterar";
+}
+
+@using (Html.BeginForm("Alterar", "Seguro", FormMethod.Post, new { @class = "form", @role = "form" }))
+{
+    <section class="panel panel-default">
+        <article class="panel-body">
+            @Html.HiddenFor(x => x.IdeSeguro)
+            <div class="row">                 
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeVeiculo, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdeVeiculo"
+                                name="IdeVeiculo"
+                                asp-for="IdeVeiculo" 
+                                asp-items="ViewBag.Veiculo">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeVeiculo)
+                    </div>
+                </div> 
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeSeguradora, new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdeSeguradora"
+                                name="IdeSeguradora"
+                                asp-for="IdeSeguradora" 
+                                asp-items="ViewBag.Seguradora">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeSeguradora)
+                    </div>
+                </div>                                
+            </div>            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumApolice , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumApolice, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NumApolice)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatVigenciaInicio, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DatVigenciaInicio, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                        @Html.ValidationMessageFor(x => x.DatVigenciaInicio)
+                    </div>
+                </div>                  
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatVigenciaFim, new { @class = "control-label required" })
+                        @Html.TextBoxFor(m => m.DatVigenciaFim, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                        @Html.ValidationMessageFor(x => x.DatVigenciaFim)
+                    </div>
+                </div> 
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatContratacao, new { @class = "control-label required" })
+                        @Html.TextBoxFor(m => m.DatContratacao, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                        @Html.ValidationMessageFor(x => x.DatContratacao)
+                    </div>
+                </div>                       
+            </div>
+            <div class="row">
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.VlrSeguro , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.VlrSeguro, new { @class = "form-control money2", @maxlength="16" })
+                        @Html.ValidationMessageFor(x => x.VlrSeguro)
+                    </div>
+                </div>
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.VlrFranquia , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.VlrFranquia, new { @class = "form-control money2", @maxlength="16" })
+                        @Html.ValidationMessageFor(x => x.VlrFranquia)
+                    </div>
+                </div>                                                
+            </div>         
+        </article>
+         <footer class="panel-footer">
+            <button type="button" class="btn btn-primary submitForm" data-loading="false"><i class="fa fa-save"></i> Salvar</button>
+            <a href=@Url.Action("Pesquisar", "Seguro") class="btn btn-default"><i class="fa fa-close"></i> Cancelar</a>
+        </footer> 
+    </section>
+}

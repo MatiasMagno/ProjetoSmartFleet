@@ -1,0 +1,178 @@
+@model  SmartFleet.Domain.ViewModel.Colaborador
+@{
+    ViewBag.Title = "Incluir Colaborador";
+    ViewBag.Current = " Cadastro / <a href='/Colaborador/Pesquisar'>Colaborador</a> / Incluir";
+}
+
+@using (Html.BeginForm("Incluir", "Colaborador", FormMethod.Post, new { @class = "form", @role = "form" }))
+{
+    <section class="panel panel-default">
+        <article class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomColaborador, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NomColaborador, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NomColaborador)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeTipoColaborador , new { @class = "control-label required" })
+                        <select class="form-control" 
+                                id="IdeTipoColaborador"
+                                name="IdeTipoColaborador"
+                                onchange="colaborador.onChangeColaborador(this)"
+                                asp-for="IdeTipoColaborador" 
+                                asp-items="ViewBag.TipoColaborador">
+                            <option value="">Selecione</option>
+                        </select> 
+                        @Html.ValidationMessageFor(x => x.IdeTipoColaborador)
+                    </div>
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumMatricula , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumMatricula, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NumMatricula)
+                    </div>
+                </div>                 
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumCPF, new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumCPF, new { @class = "form-control cpf" })
+                        @Html.ValidationMessageFor(x => x.NumCPF)
+                    </div>
+                </div>                  
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatNascimento, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DatNascimento, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdcSexo , new { @class = "control-label required" })
+                        @Html.DropDownListFor(x => x.IdcSexo, new SelectList(ViewBag.Sexo, "Value", "Text"), "Selecione",  new 
+                        { 
+                            @class = "form-control", 
+                            @data_val = "true", 
+                            @data_val_required = "Campo é de preenchimento obrigatório." 
+                        })
+                        @Html.ValidationMessageFor(x => x.IdcSexo)
+                    </div>
+                </div>  
+
+            </div>
+            <div class="row">
+                 <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomMae , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NomMae, new { @class = "form-control" })
+                    </div>
+                </div>                
+                 <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NomPai , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NomPai, new { @class = "form-control" })
+                    </div>
+                </div> 
+            </div>
+            <div class="row"> 
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumCelular , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.NumCelular, new { @class = "form-control phone-cell-mask", @placeholder = "(__) _____-____" })
+                        @Html.ValidationMessageFor(x => x.NumCelular)
+                    </div>
+                </div>      
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumTelefone , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumTelefone, new { @class = "form-control phone-home-mask", @placeholder = "(__) ____-____" })
+                    </div>
+                </div>                
+                 <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.DscEmail , new { @class = "control-label required" })
+                        @Html.TextBoxFor(x => x.DscEmail, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.DscEmail)
+                    </div>
+                </div>                 
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdcCategoriaCNH , new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdcCategoriaCNH"
+                                name="IdcCategoriaCNH"
+                                asp-for="IdcCategoriaCNH" 
+                                asp-items="ViewBag.CategoriaCNH">
+                            <option value="">Selecione</option>
+                        </select>
+                        @Html.ValidationMessageFor(x => x.IdcCategoriaCNH)
+                    </div>
+                </div>  
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.NumCNH , new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.NumCNH, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.NumCNH)
+                    </div>
+                </div> 
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatValidadeCNH, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DatValidadeCNH, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                        @Html.ValidationMessageFor(x => x.DatValidadeCNH)
+                    </div>
+                </div>  
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeUnidadeFederacaoCNH , new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdeUnidadeFederacaoCNH"
+                                name="IdeUnidadeFederacaoCNH"
+                                asp-for="IdeUnidadeFederacaoCNH" 
+                                asp-items="ViewBag.UnidadeFederacao">
+                            <option value="">Selecione</option>
+                        </select>
+                        @Html.ValidationMessageFor(x => x.IdeUnidadeFederacaoCNH)
+                    </div>
+                </div>  
+            </div>          
+        </article>
+         <footer class="panel-footer">
+            <button type="button" class="btn btn-primary submitForm" data-loading="false"><i class="fa fa-save"></i> Salvar</button>
+            <a href=@Url.Action("Pesquisar", "Colaborador") class="btn btn-default"><i class="fa fa-close"></i> Cancelar</a>
+        </footer> 
+    </section>
+}
+
+
+
