@@ -9,6 +9,7 @@
     <section class="panel panel-default">
         <article class="panel-body">
             @Html.HiddenFor(x => x.IdeTransporte)
+            @Html.HiddenFor(x => x.IdeMotorista)
             @Html.HiddenFor(x => x.DthPartida)
             @Html.HiddenFor(x => x.NumKMInicio)
             @Html.HiddenFor(x => x.DthChegada)
@@ -38,12 +39,25 @@
                 <div class="col-md-3">
                     <div class="form-group has-feedback">
                         @Html.LabelFor(x => x.DthSolicitacao, new { @class = "control-label required" })
-                        @Html.TextBoxFor(x => x.DthSolicitacao, null, new
-                        {
-                            @class = "form-control form_datetime onlyNumber",
-                            @placeholder = "__/__/____ __:__", 
-                            @size="16"
-                        })
+                        @{
+                            if (Model.DthPartida.HasValue) 
+                            {
+                                @Html.TextBoxFor(x => x.DthSolicitacao, null, new
+                                {
+                                    @class = "form-control onlyNumber",
+                                    @placeholder = "__/__/____ __:__", 
+                                    @readonly="readonly",
+                                    @size="16"
+                                })
+                            } else {
+                                @Html.TextBoxFor(x => x.DthSolicitacao, null, new
+                                {
+                                    @class = "form-control form_datetime onlyNumber",
+                                    @placeholder = "__/__/____ __:__", 
+                                    @size="16"
+                                })
+                            }
+                        }
                         <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
                         @Html.ValidationMessageFor(x => x.DthSolicitacao)
                     </div>
@@ -51,18 +65,29 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group">
-                        @Html.LabelFor(x => x.IdeVeiculo, new { @class = "control-label required" })
-                        <select class="form-control" 
-                                id="IdeVeiculo"
-                                name="IdeVeiculo"
-                                onchange="transporte.onchangeVeiculo(this)"
-                                asp-for="IdeVeiculo" 
-                                asp-items="ViewBag.Veiculo">
-                            <option value="">Selecione</option>
-                        </select> 
-                        @Html.ValidationMessageFor(x => x.IdeVeiculo)
-                    </div>
+                    @{
+                        if (Model.DthPartida.HasValue) 
+                        {
+                            <div class="form-group">
+                                @Html.HiddenFor(x => x.IdeVeiculo)
+                                @Html.LabelFor(x => x.DscMarcaModelo, new { @class = "control-label" })
+                                @Html.TextBoxFor(x => x.DscMarcaModelo, null, new { @class = "form-control", @readonly="readonly" })
+                            </div>
+                        } else {
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.IdeVeiculo, new { @class = "control-label required" })
+                                <select class="form-control" 
+                                        id="IdeVeiculo"
+                                        name="IdeVeiculo"
+                                        onchange="transporte.onchangeVeiculo(this)"
+                                        asp-for="IdeVeiculo" 
+                                        asp-items="ViewBag.Veiculo">
+                                    <option value="">Selecione</option>
+                                </select> 
+                                @Html.ValidationMessageFor(x => x.IdeVeiculo)
+                            </div>
+                        }
+                    }
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
@@ -75,26 +100,18 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         @Html.LabelFor(x => x.IdeMotorista, new { @class = "control-label required" })
-                        <select class="form-control" 
-                                id="IdeMotorista"
-                                name="IdeMotorista"
-                                onchange="transporte.onchangeMotorista(this)"
-                                asp-for="IdeMotorista" 
-                                asp-items="ViewBag.Motorista">
-                            <option value="">Selecione</option>
-                        </select> 
-                        @Html.ValidationMessageFor(x => x.IdeMotorista)
+                        @Html.TextBoxFor(x => x.NomMotorista, new { @class = "form-control", @readonly="readonly" })    
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.NumMatriculaMotorista , new { @class = "control-label" })
+                        @Html.LabelFor(x => x.NumMatriculaMotorista, new { @class = "control-label" })
                         @Html.TextBoxFor(x => x.NumMatriculaMotorista, new { @class = "form-control", @readonly="readonly" })
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.NumCelularMotorista , new { @class = "control-label" })
+                        @Html.LabelFor(x => x.NumCelularMotorista, new { @class = "control-label" })
                         @Html.TextBoxFor(x => x.NumCelularMotorista, new { @class = "form-control", @readonly="readonly" })
                     </div>
                 </div>                                                  
@@ -188,7 +205,7 @@
     <script type="text/javascript">
         $(".form_datetime").datetimepicker({
             language:  "pt-BR",
-            format: "dd/MM/yyyy hh:ii",
+            format: "dd/mm/yyyy hh:ii",
             weekStart: 1,
             todayBtn:  1,
             autoclose: 1,
@@ -201,14 +218,11 @@
         $(".form_datetime").mask("99/99/9999 99:99");
         $(".form_datetime").datetimepicker("update");
 
-        var solicitante = $("#IdeSolicitante");
+        var solicitante = $("#IdeSolicitante"); 
         transporte.onchangeSolicitante(solicitante);
 
         var veiculo = $("#IdeVeiculo");
         transporte.onchangeVeiculo(veiculo);
-
-        var motorista = $("#IdeMotorista");
-        transporte.onchangeMotorista(motorista);
 
         var model = @Html.Raw(Json.Serialize(@Model));
 

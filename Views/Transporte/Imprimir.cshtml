@@ -1,0 +1,77 @@
+@model List<SmartFleet.Domain.ViewModel.Transporte>;
+@{
+    Layout = "~/Views/Shared/_RelatorioHTML.cshtml";
+}
+<!doctype html>
+
+<head>
+
+</head>
+
+<body>
+    <form id="formRelatorio" class="form hide" role="form">
+        <section class="panel panel-default">
+            <article class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.Label("Solicitante: ", null, new { @class = "control-label" })
+                            <span>@ViewBag.Solicitante</span>
+                        </div>
+                    </div>                      
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.Label("Data do Agendamento Início: ", null, new { @class = "control-label" })
+                            <span>@ViewBag.DthSolicitacaoInicio</span>
+                        </div>
+                    </div> 
+                    <div class="col-md-3">
+                        <div class="form-group has-feedback">
+                            @Html.Label("Data do Agendamento Fim: ", null, new { @class = "control-label" }) 
+                            <span>@ViewBag.DthSolicitacaoFim</span>
+                        </div>
+                    </div>                 
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-feedback">
+                            @Html.Label("Veículo: ", null, new { @class = "control-label" })
+                            <span>@ViewBag.Veiculo</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-feedback">
+                            @Html.Label("Motorista: ", null, new { @class = "control-label" })
+                            <span>@ViewBag.Motorista</span>
+                        </div>
+                    </div> 
+                </div>
+
+                <br>
+                <div class="panel panel-default hide datatable table-responsive">
+                    <table class="table table-striped b-t b-light table-bordered table-hover datatable">
+                        <thead>
+                            <th>Solicitante</th>
+                            <th>Data do Agendamento</th>
+                            <th>Veículo</th>
+                            <th>Motorista</th>
+                            <th>Status</th>                 
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                               <tr>
+                                   <td>@item.Solicitante.NomColaborador</td>
+                                   <td>@item.DthSolicitacao.ToString("dd/MM/yyyy HH:mm")</td>
+                                   <td>@item.Veiculo.DscMarcaModelo</td>
+                                   <td>@item.Motorista.NomColaborador</td>
+                                   <td>@item.DscStatus</td>                         
+                               </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </form>
+</body>

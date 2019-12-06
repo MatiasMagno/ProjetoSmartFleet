@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Linq.Expressions;
 using SmartFleet.Domain.ViewModel;
 using SmartFleet.Domain.Infraestrutura.Utility;
@@ -12,10 +14,14 @@ namespace SmartFleet.Service
 {
     public class ManutencaoService : BaseService
     {
+        private readonly IConfiguration _configuration;
         private readonly ProdutoService _produtoService;
-        public ManutencaoService()
+        private readonly VeiculoService _veiculoService;
+        public ManutencaoService(IConfiguration configuration)
         {        
+            _configuration = configuration;
             _produtoService = new ProdutoService();
+            _veiculoService = new VeiculoService();
         }
 
         public Manutencao GetById(int id) 
@@ -24,7 +30,7 @@ namespace SmartFleet.Service
              .Where(x => x.IdeManutencao == id)
              .Include(x => x.Colaborador)
              .Include(x => x.Veiculo)
-             .Include(x => x.ManutencaoProduto)
+             .Include(x => x.ManutencaoProduto).ThenInclude(p => p.Produto)
              .FirstOrDefault();
             
             return new Manutencao() 
@@ -52,7 +58,7 @@ namespace SmartFleet.Service
                         (temIdcTipoManutencao? x.IdcTipoManutencao == item.IdcTipoManutencao: true))
              .Include(x => x.Colaborador)
              .Include(x => x.Veiculo)
-             .Include(x => x.ManutencaoProduto);
+             .Include(x => x.ManutencaoProduto).ThenInclude(p => p.Produto);
 
             return items;
         }
@@ -61,6 +67,9 @@ namespace SmartFleet.Service
         {
             var items = DbConnection.Manutencao
             .Where(where)
+            .Include(x => x.Colaborador)
+            .Include(x => x.Veiculo)
+            .Include(x => x.ManutencaoProduto).ThenInclude(p => p.Produto)
             .Select(x => new Manutencao()
             {
                 Colaborador = new Colaborador().UpdateValues(x.Colaborador),
@@ -101,18 +110,31 @@ namespace SmartFleet.Service
 
         public void Verify(Manutencao item) 
         {       
+            var msg = string.Format(Descricoes.MSG024, "Saída da Manutenção");
+            if (item.DthSaida > DateTime.Now) {
+                throw new CoreException(msg, CoreExceptionType.Alert);
+            }
+
+            msg = string.Format(Descricoes.MSG035, "Entrada na Manutenção", "Saída da Manutenção");
+            if (item.DthSaida < item.DthEntrada) {
+                throw new CoreException(msg, CoreExceptionType.Alert);
+            }
 
         }
         public void Save(Manutencao item) 
         {
             Verify(item);
 
+            var emailEnviado = false;
+
             if (item.IdeManutencao > 0) 
             {
                 var itemUpd = DbConnection.Manutencao
                 .Where(x => x.IdeManutencao == item.IdeManutencao)
+                .Include(x => x.ManutencaoProduto)
                 .FirstOrDefault();
 
+                emailEnviado = itemUpd.DthSaida.HasValue;
                 itemUpd.UpdateValues(item);
 
                 foreach(var obj in itemUpd.ManutencaoProduto) 
@@ -131,10 +153,16 @@ namespace SmartFleet.Service
             {
                 var itemNew = new Entities.Manutencao();
                 itemNew.UpdateValues(item);
-                itemNew.DthEntrada = DateTime.Now;
+                itemNew.DthEntrada = Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
                 DbConnection.Manutencao.Add(itemNew);
             }
             DbConnection.SaveChanges();
+
+            // O e-mail será enviado ao Setor de Transporte, quando a manutenção do veículo for concluída.
+            if ((!emailEnviado) && (item.DthSaida.HasValue)) {
+                EnviarEmail(item);
+            }
+
         }
         public void Delete(int id) 
         {
@@ -159,7 +187,7 @@ namespace SmartFleet.Service
         public IEnumerable<Produto> BuscarProduto(string text, int take = 10) 
         {
             var items = _produtoService
-            .GetAll(x => x.IdeProduto > 0)
+            .GetAll(x => x.NomProduto.ToLower().Contains(text.ToLower()))
             .OrderBy(x => x.NomProduto)
             .Take(take)
             .Select(x => new Produto().UpdateValues(x))
@@ -167,6 +195,38 @@ namespace SmartFleet.Service
 
             return items;
         }
+
+        private void EnviarEmail(Manutencao item) 
+        {
+
+            var emailDestinatario = _configuration.GetSection("SetorTransporte:Email").Value;
+
+            var veiculo = _veiculoService
+            .GetAll(x => x.IdeVeiculo == item.IdeVeiculo)
+            .FirstOrDefault();
+
+            var email = new Email(_configuration);
+
+            var subject = "SmartFleet - Sistema de Gestão de Frotas";
+
+            StringBuilder body = new StringBuilder();
+
+            body.Append("Ao setor de transporte,");
+            body.Append("<br /><br />");
+
+            body.Append(string.Format("Gostaria de informar que foi concluída a munutenção no veículo <b>{0}</b> com placa <b>{1}</b>.", veiculo.DscMarcaModelo, veiculo.NumPlaca));
+            body.Append("<br />");
+
+            body.Append("O mesmo se encontra a disposição para ser retirado.");
+            body.Append("<br /><br />");
+
+            body.Append("Atenciosamente,");
+            body.Append("<br />");
+
+            body.Append("Setor de Manutenção");
+
+            email.Enviar(null, emailDestinatario, null, null, subject, body.ToString());            
+        }        
 
     }
 }

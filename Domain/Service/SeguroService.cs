@@ -39,13 +39,17 @@ namespace SmartFleet.Service
             var temDatVigenciaInicio = item.DatVigenciaInicio.HasValue;
             var temDatVigenciaFim = item.DatVigenciaFim.HasValue;
             var temNumApolice = !string.IsNullOrEmpty(item.NumApolice);
+            var temIdcSim = item.IdcSim == "S";
+            var temIdcNao = item.IdcNao == "S";
 
             var items = DbConnection.Seguro
             .Where(x => (temIdeVeiculo? x.IdeVeiculo == item.IdeVeiculo: true) &&
                         (temIdeSeguradora? x.IdeSeguradora == item.IdeSeguradora: true) &&
                         (temDatVigenciaInicio? x.DatVigenciaInicio >= item.DatVigenciaInicio: true) &&
                         (temDatVigenciaFim? x.DatVigenciaFim <= item.DatVigenciaFim: true) &&
-                        (temNumApolice? x.NumApolice == item.NumApolice: true))
+                        (temNumApolice? x.NumApolice == item.NumApolice: true) &&
+                        (temIdcSim? x.DatVigenciaFim >= DateTime.Now.Date: true) &&
+                        (temIdcNao? x.DatVigenciaFim < DateTime.Now.Date: true))
             .Include(x => x.Veiculo)
             .Include(x => x.Seguradora);
 
@@ -68,6 +72,9 @@ namespace SmartFleet.Service
 
         public IEnumerable<Seguro> GetAllByPage(Seguro item, DatatableParm parm)
         {
+            parm.sColumns = parm.sColumns.Replace("veiculo.dscMarcaModelo","Veiculo.DscMarcaModelo");
+            parm.sColumns = parm.sColumns.Replace("seguradora.nomRazaoSocial","Seguradora.NomRazaoSocial");
+
             var items = GetAll(item);
             parm.totalRecords = items.Count();
             var list = items.OrderPaging(parm.GetOrderByText(), parm.sSortDir_0, parm.iDisplayStart, parm.iDisplayLength);
@@ -147,6 +154,18 @@ namespace SmartFleet.Service
             }
 
             return msg;       
+        }
+
+        public IEnumerable<Seguro> GetRelatorio(Seguro item) 
+        {
+            var items = GetAll(item)
+                .Select(x => new Seguro() 
+                {
+                    Veiculo = new Veiculo().UpdateValues(x.Veiculo),
+                    Seguradora = new PessoaJuridica().UpdateValues(x.Seguradora)
+                }.UpdateValues(x));
+            
+            return items;
         }
     }
 }

@@ -171,7 +171,7 @@ namespace SmartFleet.Controllers
                 .ToList();
 
             var UF = colaboradorService
-            .BuscarUnidadeFederacao(x => x.IdeUnidadeFederacao > 0)
+            .BuscarUnidadeFederacao()
             .ToList();
 
             ViewBag.UnidadeFederacao = UF

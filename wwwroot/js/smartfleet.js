@@ -6,7 +6,7 @@ $(document).ready(function()
         $(this).parent().find("input").focus();
     });
 
-    $(".tipo-combustivel").change(function (evt) 
+    $(".checkbox-idc").change(function (evt) 
     {
         var chave = $(this).attr("chave");
         if (chave != undefined) 
@@ -537,7 +537,43 @@ var manutencao = {
     {
         CloseLoad();
         $("#NumPlaca").val("");
-    },    
+    },
+
+    onchangeMecanico: function(e) 
+    {
+        LoadScreen();
+        var id = $(e).val();
+        if (id == ""){
+            this.limparMecanico();
+        } else {
+            $.ajax({
+                type: "POST",
+                data: { ideMecanico: id },
+                url: "/Manutencao/BuscarMecanico",
+                success: function (data) {
+                    if (data.ok) 
+                    {
+                        $("#NumMatriculaMecanico").val(data.item.numMatricula);
+                        CloseLoad();
+                    } else {
+                        CloseLoad();
+                        app.callMsg(data.msg);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    CloseLoad();
+                    var msg = "Status: " + textStatus + "<br />" + "Error: " + errorThrown;
+                    app.callMsg(msg, "Erro");
+                }
+            });
+        }
+    },
+
+    limparMecanico: function() 
+    {
+        CloseLoad();
+        $("#NumMatriculaMecanico").val("");
+    },
 
     selecionarProduto: function(data) 
     {
@@ -549,7 +585,15 @@ var manutencao = {
         if (produto() != undefined) 
         {
             $("#NomProduto").val("");
-            produtos.push(produto());
+
+            var ret = ko.utils.arrayFirst(produtos(), function(item) {
+                return produto().ideProduto == item.ideProduto;
+            });
+            
+            if (ret == undefined) {
+                produtos.push(produto());
+            }
+
             produto = ko.observable(null);
         }
     },
@@ -571,9 +615,9 @@ var manutencao = {
         {
             LoadScreen();
             var item = $(form).serializeObject();
-            item.produto = [];
+            item.manutencaoProduto = [];
 
-            $.each(passageiros(), function(index, value) {
+            $.each(produtos(), function(index, value) {
                 var obj = {
                     IdeManutencao: value.ideManutencao != undefined? value.ideManutencao: 0,
                     IdeProduto: value.ideProduto

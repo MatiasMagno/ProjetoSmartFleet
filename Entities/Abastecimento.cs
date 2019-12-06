@@ -10,7 +10,6 @@ namespace SmartFleet.Entities
         public int IdeTipoCombustivel { get; set; }
         public int IdePessoaJuridica { get; set; }
         public DateTime DatAbastecimento { get; set; }
-        // public int NumKMAtual { get; set; }
         public decimal QtdAbastecimento { get; set; }
         public decimal VlrAbastecimento { get; set; }
 

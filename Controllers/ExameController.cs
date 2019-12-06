@@ -184,7 +184,7 @@ namespace SmartFleet.Controllers
                 .ToList();                
 
             var UFCRMMedico = exameService
-            .BuscarUnidadeFederacao(x => x.IdeUnidadeFederacao > 0)
+            .BuscarUnidadeFederacao()
             .ToList();
 
             ViewBag.UFCRMMedico = UFCRMMedico

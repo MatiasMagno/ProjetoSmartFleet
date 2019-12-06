@@ -1,0 +1,76 @@
+@model List<SmartFleet.Domain.ViewModel.Seguro>;
+@{
+    Layout = "~/Views/Shared/_RelatorioHTML.cshtml";
+}
+<!doctype html>
+
+<head>
+
+</head>
+
+<body>
+    <form id="formRelatorio" class="form hide" role="form">
+        <section class="panel panel-default">
+            <article class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.Label("Veiculo: ", null, new { @class = "control-label" })
+                            <span>@ViewBag.DscMarcaModelo</span>
+                        </div>
+                    </div>  
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.Label("Seguradora: ", null, new { @class = "control-label" })
+                            <span>@ViewBag.NomRazaoSocial</span>
+                        </div>
+                    </div>                 
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group has-feedback">
+                            @Html.Label("Início da Vigência: ", null, new { @class = "control-label" }) 
+                            <span>@ViewBag.DatVigenciaInicio</span>
+                        </div>
+                    </div> 
+                    <div class="col-md-3">
+                        <div class="form-group has-feedback">
+                            @Html.Label("Fim da Vigência: ", null, new { @class = "control-label" })
+                            <span>@ViewBag.DatVigenciaFim</span>
+                        </div>
+                    </div> 
+                </div>
+                <br>
+                <div class="panel panel-default hide datatable table-responsive">
+                    <table class="table table-striped b-t b-light table-bordered table-hover datatable">
+                        <thead>
+                            <th>Veículo</th>
+                            <th>Seguradora</th>
+                            <th>Número da Apólice</th>
+                            <th>Data de Contratação</th>
+                            <th>Início da Vigência</th>
+                            <th>Fim da Vigência</th>
+                            <th>Valor do Seguro</th>
+                            <th>Valor da Franquia</th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                               <tr>
+                                   <td>@item.Veiculo.DscMarcaModelo</td>
+                                   <td>@item.Seguradora.NomRazaoSocial</td>
+                                   <td>@item.NumApolice</td>
+                                   <td>@item.DatContratacao.ToString("dd/MM/yyyy")</td>
+                                   <td>@item.DatVigenciaInicio.Value.ToString("dd/MM/yyyy")</td>
+                                   <td>@item.DatVigenciaFim.Value.ToString("dd/MM/yyyy")</td>
+                                   <td>@item.VlrSeguro.ToString("C")</td>
+                                   <td>@item.VlrFranquia.ToString("C")</td>                               
+                               </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </form>
+</body>

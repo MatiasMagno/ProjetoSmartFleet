@@ -94,8 +94,26 @@ namespace SmartFleet.Service
                 {
                     throw new CoreException(Descricoes.MSG006,CoreExceptionType.Alert);
                 }
-
             }
+
+            var colaborador = DbConnection.Colaborador
+            .Where(x => x.NumMatricula == item.NumMatricula &&
+                        x.IdeColaborador != item.IdeColaborador)
+            .FirstOrDefault();
+
+            if (colaborador != null) {
+                throw new CoreException(Descricoes.MSG037, CoreExceptionType.Alert);
+            }
+
+            colaborador = DbConnection.Colaborador
+            .Where(x => x.NumCPF == item.NumCPF &&
+                        x.IdeColaborador != item.IdeColaborador)
+            .FirstOrDefault();
+
+            if (colaborador != null) {
+                throw new CoreException(Descricoes.MSG038, CoreExceptionType.Alert);
+            }
+
         }
         
         public void Save(Colaborador item) 
@@ -166,12 +184,6 @@ namespace SmartFleet.Service
 
             return items;
         }
-
-        // public IEnumerable<UnidadeFederacao> BuscarUnidadeFederacao() 
-        // {
-        //     var items = this.BuscarUnidadeFederacao(x => x.IdeUnidadeFederacao > 0).ToList();
-        //     return items;
-        // }
 
         public IEnumerable<SelectListItem> BuscarCategoriaCNH() 
         {

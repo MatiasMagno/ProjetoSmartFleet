@@ -159,7 +159,7 @@ namespace SmartFleet.Controllers
         private void CarregarViewBag() 
         {
             var UF =  pessoaJuridicaService
-            .BuscarUnidadeFederacao(x => x.IdeUnidadeFederacao > 0)
+            .BuscarUnidadeFederacao()
             .ToList();
 
             ViewBag.UnidadeFederacao = UF

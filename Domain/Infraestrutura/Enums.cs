@@ -41,5 +41,12 @@ namespace SmartFleet.Domain.Infraestrutura
             Preventiva = 'P'
         }
 
+        public enum StatusViagem 
+        {
+            AguardandoInicioViagem = 1,
+            ViagemIniciada = 2,
+            ViagemFinalizada = 3            
+        }
+
     }
 }

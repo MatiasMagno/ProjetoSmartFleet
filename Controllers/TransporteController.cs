@@ -48,33 +48,8 @@ namespace SmartFleet.Controllers
             try
             {         
                 SalvarPesquisa(item, parm);
-                var items = transporteService.GetAllByPage(item, parm);
-
-                 return Json(new
-                 {
-                     ok = true,
-                     sEcho = parm.sEcho,
-                     iTotalRecords = items.Count(),
-                     iTotalDisplayRecords = parm.totalRecords,
-                     aaData = items.Select(x => new
-                     {
-                        IdeTransporte = x.IdeTransporte,
-                        DthSolicitacao = x.DthSolicitacao.ToString("dd/MM/yyyy HH:mm"),
-                        dscStatus = BusacarStatus(x),
-                        Solicitante = new {
-                            IdeColaborador = x.Solicitante.IdeColaborador,
-                            NomColaborador = x.Solicitante.NomColaborador
-                        },
-                        Veiculo = new {
-                            IdeVeiculo = x.Veiculo.IdeVeiculo,
-                            DscMarcaModelo = x.Veiculo.DscMarcaModelo
-                        },
-                        Motorista = new {
-                            IdeColaborador = x.Motorista.IdeColaborador,
-                            NomColaborador = x.Motorista.NomColaborador                            
-                        }
-                     })
-                 });
+                var items = transporteService.GetAllByPage(item, parm).ToList();
+                 return GetJsonGrid(parm, items);
             }
             catch (Exception ex)
             {
@@ -82,18 +57,35 @@ namespace SmartFleet.Controllers
             }
         }
 
-        private string BusacarStatus(Transporte item) 
+        private JsonResult GetJsonGrid(DatatableParm parm, List<Transporte> items) 
         {
-            var status = "Aguardando Início da Viagem";
-            
-            if (item.DthPartida.HasValue)
-                status = "Viagem Iniciada";
+            return Json(new
+            {
+                ok = true,
+                sEcho = parm.sEcho,
+                iTotalRecords = items.Count(),
+                iTotalDisplayRecords = parm.totalRecords,
+                aaData = items.Select(x => new
+                {
+                    DscStatus = x.DscStatus,
+                    IdeTransporte = x.IdeTransporte,
+                    DthSolicitacao = x.DthSolicitacao.ToString("dd/MM/yyyy HH:mm"),
+                    Solicitante = new {
+                        IdeColaborador = x.Solicitante.IdeColaborador,
+                        NomColaborador = x.Solicitante.NomColaborador
+                    },
+                    Veiculo = new {
+                        IdeVeiculo = x.Veiculo.IdeVeiculo,
+                        DscMarcaModelo = x.Veiculo.DscMarcaModelo
+                    },
+                    Motorista = new {
+                        IdeColaborador = x.Motorista.IdeColaborador,
+                        NomColaborador = x.Motorista.NomColaborador                            
+                    }
+                })
+            });
+        }        
 
-            if (item.DthChegada.HasValue)
-                status = "Viagem Finalizada";
-
-            return status;
-        }
         public ActionResult Incluir()
         {
             CarregarViewBag(new Transporte() { IdeTransporte = 0 });
@@ -123,6 +115,11 @@ namespace SmartFleet.Controllers
         public ActionResult Alterar(int id)
         {
             var item = transporteService.GetById(id);
+            item.NomMotorista = item.Motorista.NomColaborador;
+            item.NumMatriculaMotorista = item.Motorista.NumMatricula;
+            item.NumCelularMotorista = Utils.FormataTelefone(item.Motorista.NumCelular);
+            item.DscMarcaModelo = item.Veiculo.DscMarcaModelo;
+
             CarregarViewBag(item);
             return View(item);
         }
@@ -255,6 +252,78 @@ namespace SmartFleet.Controllers
             }
         }        
 
+        public ActionResult Relatorio() 
+        {
+            CarregarViewBag();
+            return View();
+        }
+        
+        [HttpPost]
+        public JsonResult Relatorio(DatatableParm parm, Transporte item) 
+        {
+            try
+            {         
+                SalvarPesquisa(item, parm);
+                var items = transporteService.GetAllByPage(item, parm).ToList();
+                return GetJsonGrid(parm, items);
+            }
+            catch (Exception ex)
+            {
+                return Json(CreateMessageDatatable(ex));
+            }
+        }
+
+        public ActionResult Imprimir()
+        {
+            ViewBag.Titulo = "Relatório de Solicitação de Veículo";
+            ParamPesq pesq = BuscarPesquisa<Transporte>();
+            if (pesq != null)
+            {
+                var item = (Transporte)pesq.entity;
+                var items = transporteService.GetRelatorio(item).ToList();
+
+                var nomSolicitante = "";
+                if (item.IdeSolicitante > 0) 
+                {
+                    var solicitante = colaboradorService
+                    .GetAll(x => x.IdeColaborador == item.IdeSolicitante)
+                    .FirstOrDefault();
+
+                    nomSolicitante = solicitante != null? solicitante.NomColaborador: string.Empty;
+                }                
+
+                var nomMotorista = "";
+                if (item.IdeMotorista > 0) 
+                {
+                    var motorista = colaboradorService
+                    .GetAll(x => x.IdeColaborador == item.IdeMotorista)
+                    .FirstOrDefault();
+
+                    nomMotorista = motorista != null? motorista.NomColaborador: string.Empty;
+                }
+
+                var dscMarcaModelo = "";
+                if (item.IdeVeiculo > 0) 
+                {
+                    var veiculo = veiculoService
+                    .GetAll(x => x.IdeVeiculo == item.IdeVeiculo)
+                    .FirstOrDefault();
+
+                    dscMarcaModelo = veiculo != null ? veiculo.DscMarcaModelo: string.Empty;
+                }
+
+                ViewBag.Motorista = nomMotorista;   
+                ViewBag.Solicitante = nomSolicitante;
+                ViewBag.Veiculo = dscMarcaModelo;
+                ViewBag.DthSolicitacaoInicio = item.DthSolicitacaoInicio.HasValue? item.DthSolicitacaoInicio.Value.ToString("dd/MM/yyyy"): string.Empty;
+                ViewBag.DthSolicitacaoFim = item.DthSolicitacaoFim.HasValue? item.DthSolicitacaoFim.Value.ToString("dd/MM/yyyy"): string.Empty;
+
+                return View(items);
+            }
+
+            return View();      
+        }
+
         private void CarregarViewBag() 
         {   
             #region Solicitante
@@ -279,7 +348,7 @@ namespace SmartFleet.Controllers
 
             ViewBag.Veiculo = veiculo
                 .Select( x => new SelectListItem() 
-                { Value = x.IdeVeiculo.ToString(), Text = x.DscMarcaModelo } )
+                { Value = x.IdeVeiculo.ToString(), Text = string.Format("{0} - {1}", x.DscMarcaModelo, x.NumPlaca) } )
                 .OrderBy(x => x.Text)
                 .ToList();
                 
@@ -298,6 +367,18 @@ namespace SmartFleet.Controllers
             .ToList();                 
 
             #endregion
+
+            #region Status da Viagem
+
+            var statusViagem = Dominio.BuscarStatusViagem();
+            ViewBag.StatusViagem = statusViagem
+                .Select( x => new SelectListItem() 
+                { Value = x.Key, Text = x.Value } )
+                .OrderBy(x => x.Text)
+                .ToList();                 
+
+            #endregion
+
         }
 
         private void CarregarViewBag(Transporte item) 

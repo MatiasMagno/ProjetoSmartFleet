@@ -28,10 +28,6 @@ namespace SmartFleet.Domain.ViewModel
         [Required(ErrorMessage = Descricoes.MSG006)]            
         public DateTime DatAbastecimento { get; set; }
 
-        // [Display(Name = "Quilometragem Atual")]
-        // [Required(ErrorMessage = Descricoes.MSG006)]            
-        // public int NumKMAtual { get; set; }
-
         //quilowatt-hora (kWh)
         [Display(Name = "Qtde de Litros")]
         [Required(ErrorMessage = Descricoes.MSG006)]            

@@ -43,6 +43,7 @@ namespace SmartFleet.Service
         {
             var items = DbConnection.Produto
             .Where(where)
+            .ToList()
             .Select(x => new Produto().UpdateValues(x))
             .ToList();
 
@@ -63,7 +64,14 @@ namespace SmartFleet.Service
 
         public void Verify(Produto item) 
         {       
+            var produto = DbConnection.Produto
+            .Where(x => x.CodProduto == item.CodProduto &&
+                        x.IdeProduto != item.IdeProduto)
+            .FirstOrDefault();
 
+            if (produto != null) {
+                throw new CoreException(Descricoes.MSG039, CoreExceptionType.Alert);
+            }
         }
         public void Save(Produto item) 
         {

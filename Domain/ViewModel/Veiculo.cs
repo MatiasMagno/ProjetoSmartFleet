@@ -53,7 +53,7 @@ namespace SmartFleet.Domain.ViewModel
         public string CodRenavam { get; set; }
 
         //[StringLength(6)]
-        [Display(Name = "Kilometragem Inicial")]
+        [Display(Name = "Quilometragem Inicial")]
         [Required(ErrorMessage = Descricoes.MSG006)]
         public int NumKMInicial { get; set; }
 

@@ -911,35 +911,11 @@ var dtMain = {
                     var funcDelete = "app.verificarExclusao('" + grid.controller + "'," + id + ",'" + datatableId + "')";
                     var functionDelete = (grid.functionDelete == null ? funcDelete  : grid.functionDelete + "(" + id + ");");
                     var html = '<a href="/' + grid.controller + '/Alterar/' + id + '" class="btn btn-sm btn-default ' + grid.controller.toLowerCase() + '-alterar" title="Alterar"><i class="fa fa-pencil"></i></a>&nbsp;' +
-                            //    '<a href="/' + grid.controller + '/Visualizar/' + id + '" class="btn btn-sm btn-default ' + grid.controller.toLowerCase() + '-visualizar" title="Visualizar"><i class="fa fa-eye"></i></a>&nbsp;' +
                                '<a href="#" class="btn btn-sm btn-danger ' + grid.controller.toLowerCase() + '-excluir" data-loading="false" onclick="' + functionDelete + '" title="Excluir"><i class="fa fa-trash-o"></i></a>&nbsp;';
 
                     if (grid.functionAction != null) {
                         html = window[grid.functionAction](data, html);
                     }
-
-                    // /** Início do bloco 
-                    //  * Central de controle das permissão do usuário
-                    //  * (Habilita e desabilita os botões do CRUD) e customizações realizadas
-                    // **********************************************************************************************/
-
-                    // $("#" + grid.formId).append('<div id="crudAcoes" class="hide" >' + html + '</div>');
-                    // $("#crudAcoes a").addClass("disabled");
-
-                    // $.each(acoesPermitidas, function (index, value) {
-                    //     var acao = value.substr(1).toLowerCase().replace("/", "-");
-                    //     $("#crudAcoes a." + acao).removeClass("disabled");
-                    // });
-
-                    // $("#crudAcoes a.disabled").attr("data-loading", "false");
-                    // $("#crudAcoes a.disabled").removeAttr("onclick");
-                    // $("#crudAcoes a.disabled").removeAttr("href");
-
-                    // html = $("#crudAcoes").html();
-                    // $("#crudAcoes").remove();
-
-                    // /** Fim do bloco 
-                    // **********************************************************************************************/
 
                     return html;
                 }
@@ -964,19 +940,7 @@ var dtMain = {
 
         var iDisplayStart = 0;
         var aaSorting = config.aaSorting;
-        //var ControllerBuscarPaginacao = "/" + ((config.controller.split("/").length > 1) ? config.controller.split("/")[1] + "/BuscarPaginacao" : config.controller + "/BuscarPaginacao");
         var ControllerPerquisar = (config.controller.split("/").length > 1) ? config.controller : "/" + config.controller + "/Pesquisar"
-
-        // $.ajax({
-        //     url: ControllerBuscarPaginacao,
-        //     async: false,
-        //     success: function (data) {
-        //         if ((data != undefined) && (data.ok) && (data.item != undefined) && (data.item.iDisplayStart != -1)) {
-        //             aaSorting = [data.iSortCol_0, data.sSortDir_0];
-        //             iDisplayStart = data.iDisplayStart;
-        //         };
-        //     }
-        // });
 
         var pagingType = "full_numbers";
         var width = $(window).width();
@@ -1070,9 +1034,7 @@ var dtMain = {
 
                 /* função Callback que repassa um objeto vindo do controller  */
                 if (config.functionCallback != null) {
-                    if (oSettings.json.oItem != null) {
-                        window[config.functionCallback](oSettings.json.oItem);
-                    }
+                    window[config.functionCallback](oSettings.json.aaData);
                 }
 
                 // Ajustes no layout do rodapé do datatable 

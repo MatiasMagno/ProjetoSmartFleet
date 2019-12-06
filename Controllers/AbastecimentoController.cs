@@ -47,28 +47,32 @@ namespace SmartFleet.Controllers
             try
             {         
                 SalvarPesquisa(item, parm);
-                var items = abastecimentoService.GetAllByPage(item, parm);
-
-                return Json(new
-                {
-                    ok = true,
-                    sEcho = parm.sEcho,
-                    iTotalRecords = items.Count(),
-                    iTotalDisplayRecords = parm.totalRecords,
-                    aaData = items.Select(x => new
-                    {
-                        IdeAbastecimento = x.IdeAbastecimento,
-                        DatAbastecimento = x.DatAbastecimento.ToString("dd/MM/yyyy"),
-                        VlrAbastecimento = x.VlrAbastecimento.ToString("C"),
-                        Veiculo = new { DscMarcaModelo = x.Veiculo.DscMarcaModelo },
-                        PessoaJuridica = new { NomRazaoSocial = x.PessoaJuridica.NomRazaoSocial }                      
-                    })
-                });
+                var items = abastecimentoService.GetAllByPage(item, parm).ToList();
+                return GetJsonGrid(parm, items);
             }
             catch (Exception ex)
             {
                 return Json(CreateMessageDatatable(ex));
             }
+        }
+
+        private JsonResult GetJsonGrid(DatatableParm parm, List<Abastecimento> items) 
+        {
+            return Json(new
+            {
+                ok = true,
+                sEcho = parm.sEcho,
+                iTotalRecords = items.Count(),
+                iTotalDisplayRecords = parm.totalRecords,
+                aaData = items.Select(x => new
+                {
+                    IdeAbastecimento = x.IdeAbastecimento,
+                    DatAbastecimento = x.DatAbastecimento.ToString("dd/MM/yyyy"),
+                    VlrAbastecimento = x.VlrAbastecimento.ToString("C"),
+                    Veiculo = new { DscMarcaModelo = x.Veiculo.DscMarcaModelo },
+                    PessoaJuridica = new { NomRazaoSocial = x.PessoaJuridica.NomRazaoSocial }                      
+                })
+            });
         }
 
         public ActionResult Incluir()
@@ -150,6 +154,66 @@ namespace SmartFleet.Controllers
                 return Json(CreateMessageJson(ex));
             }
         }
+
+        public ActionResult Relatorio() 
+        {
+            CarregarViewBag();
+            return View();
+        }
+        
+        [HttpPost]
+        public JsonResult Relatorio(DatatableParm parm, Abastecimento item) 
+        {
+            try
+            {         
+                SalvarPesquisa(item, parm);
+                var items = abastecimentoService.GetAllByPage(item, parm).ToList();
+                return GetJsonGrid(parm, items);
+            }
+            catch (Exception ex)
+            {
+                return Json(CreateMessageDatatable(ex));
+            }
+        }
+        public ActionResult Imprimir()
+        {
+            ViewBag.Titulo = "Relatório de Abastecimento";
+            ParamPesq pesq = BuscarPesquisa<Abastecimento>();
+            if (pesq != null)
+            {
+                var item = (Abastecimento)pesq.entity;
+                var items = abastecimentoService.GetRelatorio(item).ToList();
+
+                var dscMarcaModelo = "";
+                if (item.IdeVeiculo > 0) 
+                {
+                    var veiculo = veiculoService
+                    .GetAll(x => x.IdeVeiculo == item.IdeVeiculo)
+                    .FirstOrDefault();
+
+                    dscMarcaModelo = veiculo != null ? veiculo.DscMarcaModelo: string.Empty;
+                }
+
+                var nomRazaoSocial = "";
+                if (item.IdePessoaJuridica > 0) 
+                {
+                    var pessoaJuridica = pessoaJuridicaService
+                    .GetAll(x => x.IdePessoaJuridica == item.IdePessoaJuridica)
+                    .FirstOrDefault();
+
+                    nomRazaoSocial = pessoaJuridica != null? pessoaJuridica.NomRazaoSocial: string.Empty;
+                }
+
+                ViewBag.DscMarcaModelo = dscMarcaModelo;
+                ViewBag.NomRazaoSocial = nomRazaoSocial;                
+                ViewBag.DatAbastecimentoInicio = item.DatAbastecimentoInicio.HasValue? item.DatAbastecimentoInicio.Value.ToString("dd/MM/yyyy"): string.Empty;
+                ViewBag.DatAbastecimentoFim = item.DatAbastecimentoFim.HasValue? item.DatAbastecimentoFim.Value.ToString("dd/MM/yyyy"): string.Empty;
+
+                return View(items);
+            }
+            return View();      
+        }
+
         private void CarregarViewBag() 
         {            
             var postoAbastecimento = pessoaJuridicaService

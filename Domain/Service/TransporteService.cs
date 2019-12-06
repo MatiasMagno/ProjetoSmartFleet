@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,6 @@ using SmartFleet.Domain.ViewModel;
 using SmartFleet.Domain.Infraestrutura;
 using SmartFleet.Domain.Infraestrutura.Utility;
 using SmartFleet.Domain.Infraestrutura.Messages;
-using System.Text;
 
 namespace SmartFleet.Service
 {
@@ -37,6 +37,7 @@ namespace SmartFleet.Service
 
             var ret = new Transporte()
             {
+                DscStatus = BuscarStatus(item),
                 Veiculo = new Veiculo().UpdateValues(item.Veiculo),
                 Motorista = new Colaborador().UpdateValues(item.Motorista),
                 Solicitante = new Colaborador().UpdateValues(item.Solicitante),
@@ -57,6 +58,7 @@ namespace SmartFleet.Service
             var temIdeSolicitante = item.IdeSolicitante > 0;
             var temDthSolicitacaoFim = item.DthSolicitacaoFim.HasValue;
             var temDthSolicitacaoInicio = item.DthSolicitacaoInicio.HasValue;
+            var temIdcStatus = !string.IsNullOrEmpty(item.IdcStatus);
 
             var items = DbConnection.Transporte
              .Include(x => x.Solicitante)
@@ -67,7 +69,10 @@ namespace SmartFleet.Service
                         (temIdeMotorista? x.IdeMotorista == item.IdeMotorista: true) &&
                         (temIdeSolicitante? x.IdeSolicitante == item.IdeSolicitante: true) &&
                         (temDthSolicitacaoInicio? x.DthSolicitacao >= item.DthSolicitacaoInicio: true) &&
-                        (temDthSolicitacaoFim? x.DthSolicitacao <= item.DthSolicitacaoFim: true)
+                        (temDthSolicitacaoFim? x.DthSolicitacao <= item.DthSolicitacaoFim: true) &&
+                        ((temIdcStatus && item.IdcStatus == Enums.StatusViagem.AguardandoInicioViagem.GetHashCode().ToString())? !x.DthPartida.HasValue: true) &&
+                        ((temIdcStatus && item.IdcStatus == Enums.StatusViagem.ViagemIniciada.GetHashCode().ToString())? (x.DthPartida.HasValue && !x.DthChegada.HasValue): true) &&
+                        ((temIdcStatus && item.IdcStatus == Enums.StatusViagem.ViagemFinalizada.GetHashCode().ToString())? x.DthChegada.HasValue: true )
                   );
 
             return items;
@@ -84,6 +89,7 @@ namespace SmartFleet.Service
             .ToList()
             .Select(x => new Transporte() 
             {
+                DscStatus = BuscarStatus(x),
                 Veiculo = new Veiculo().UpdateValues(x.Veiculo),
                 Motorista = new Colaborador().UpdateValues(x.Motorista),
                 Solicitante = new Colaborador().UpdateValues(x.Solicitante),
@@ -100,6 +106,7 @@ namespace SmartFleet.Service
             var list = items.OrderPaging(parm.GetOrderByText(), parm.sSortDir_0, parm.iDisplayStart, parm.iDisplayLength);
             var ret = list.Select(x => new Transporte() 
             {
+                DscStatus = BuscarStatus(x),
                 Veiculo = new Veiculo().UpdateValues(x.Veiculo),
                 Motorista = new Colaborador().UpdateValues(x.Motorista),
                 Solicitante = new Colaborador().UpdateValues(x.Solicitante),
@@ -110,11 +117,19 @@ namespace SmartFleet.Service
 
         public void Verify(Transporte item) 
         {    
-            // O agendamento não pode ser superior a 4 horas
-            var dataReferencia = DateTime.Now.AddHours(4);
+            // O agendamento não pode ser superior a 2 horas
+            var dataReferencia = DateTime.Now.AddHours(2);
 
             if (item.DthSolicitacao > dataReferencia) {
                 throw new CoreException(Descricoes.MSG034, CoreExceptionType.Alert);
+            }
+
+            var dataAtual = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+
+            //Inclusão de registro
+            if ((!item.DthPartida.HasValue) && (item.DthSolicitacao < Convert.ToDateTime(dataAtual)))
+            {
+                throw new CoreException(Descricoes.MSG040, CoreExceptionType.Alert);
             }
          
         }
@@ -165,6 +180,11 @@ namespace SmartFleet.Service
 
         private void VerifyViagem(Transporte item) 
         {
+            if ((item.DthPartida.HasValue) && (item.DthPartida.Value.Date < item.DthSolicitacao.Date)) 
+            {
+                throw new CoreException(Descricoes.MSG041, CoreExceptionType.Alert);
+            }
+
             if ((item.DthChegada.HasValue) && (!item.NumKMFim.HasValue)) 
             {
                 var msg = string.Format(Descricoes.MSG026, "Quilometragem Final");
@@ -249,6 +269,34 @@ namespace SmartFleet.Service
             .ToList();
 
             return items;
+        }
+
+        public IEnumerable<Transporte> GetRelatorio(Transporte item) 
+        {
+            var items = GetAll(item)
+                .Select(x => new Transporte() 
+                {
+                    DscStatus = BuscarStatus(x),
+                    Veiculo = new Veiculo().UpdateValues(x.Veiculo),
+                    Motorista = new Colaborador().UpdateValues(x.Motorista),
+                    Solicitante = new Colaborador().UpdateValues(x.Solicitante),
+                    Passageiro = x.Passageiro.Select(p => new Passageiro().UpdateValues(p)).ToList()
+                }.UpdateValues(x));
+            
+            return items;
+        }        
+
+        private string BuscarStatus(Entities.Transporte item) 
+        {
+            var status = "Aguardando Início da Viagem";
+            
+            if (item.DthPartida.HasValue)
+                status = "Viagem Iniciada";
+
+            if (item.DthChegada.HasValue)
+                status = "Viagem Finalizada";
+
+            return status;
         }
 
         private void EnviarEmail(Transporte item) 

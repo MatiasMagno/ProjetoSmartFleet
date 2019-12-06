@@ -27,8 +27,8 @@ namespace SmartFleet.Controllers
         public ManutencaoController(IConfiguration configuration)
         {
             veiculoService = new VeiculoService();
-            manutencaoService = new ManutencaoService();
             colaboradorService = new ColaboradorService();
+            manutencaoService = new ManutencaoService(configuration);
             transporteService = new TransporteService(configuration);
         }
 
@@ -60,7 +60,18 @@ namespace SmartFleet.Controllers
                      iTotalDisplayRecords = parm.totalRecords,
                      aaData = items.Select(x => new
                      {
-                        IdeManutencao = x.IdeManutencao
+                        IdeManutencao = x.IdeManutencao,
+                        IdcTipoManutencao = x.IdcTipoManutencao == "C"? "Corretiva": "Preventiva",
+                        DthEntrada = x.DthEntrada.ToString("dd/MM/yyyy HH:mm"),
+                        DthSaida = x.DthSaida.HasValue? x.DthSaida.Value.ToString("dd/MM/yyyy HH:mm"): string.Empty,
+                        Veiculo = new {
+                            IdeVeiculo = x.Veiculo.IdeVeiculo,
+                            DscMarcaModelo = x.Veiculo.DscMarcaModelo
+                        },
+                        Colaborador = new {
+                            IdeColaborador = x.Colaborador.IdeColaborador,
+                            NomColaborador = x.Colaborador.NomColaborador                            
+                        }
                      })
                  });
             }
@@ -178,7 +189,61 @@ namespace SmartFleet.Controllers
             }
         }
 
-        private void CarregarViewBag() {
+        [HttpPost]
+        public JsonResult BuscarMecanico(int ideMecanico)
+        {
+            try
+            {
+                var item = colaboradorService.GetById(ideMecanico);
+                return Json(new { ok = true, item = item });
+            }
+            catch (Exception ex)
+            {
+                return Json(CreateMessageJson(ex));
+            }
+        }        
+
+        private void CarregarViewBag() 
+        {
+
+            #region Veículo
+
+            var veiculo = veiculoService
+            .GetAll(x => x.IdeVeiculo > 0)
+            .ToList();
+
+            ViewBag.Veiculo = veiculo
+                .Select( x => new SelectListItem() 
+                { 
+                    Value = x.IdeVeiculo.ToString(), 
+                    Text = string.Format("{0} - {1}", x.DscMarcaModelo, x.NumPlaca) 
+                })
+                .OrderBy(x => x.Text)
+                .ToList();
+
+            #endregion
+
+            #region Mecânico
+
+            var mecanico = colaboradorService
+            .GetAll(x => x.IdeTipoColaborador == Enums.TipoColaborador.Mecanico.GetHashCode())
+            .ToList();
+
+            ViewBag.mecanico = mecanico
+            .Select( x => new SelectListItem() 
+            { Value = x.IdeColaborador.ToString(), Text = x.NomColaborador } )
+            .OrderBy(x => x.Text)
+            .ToList();                 
+
+            #endregion
+
+            var tipoManutencao = Dominio.BuscarTipoManutencao();
+
+            ViewBag.TipoManutencao = tipoManutencao
+                .Select( x => new SelectListItem() 
+                { Value = x.Key, Text = x.Value } )
+                .OrderBy(x => x.Text)
+                .ToList();
 
         }
 

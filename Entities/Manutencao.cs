@@ -13,7 +13,11 @@ namespace SmartFleet.Entities
         public int IdeManutencao { get; set; }
         public int IdeVeiculo { get; set; }
         public int IdeColaborador { get; set; }
+        public int NumKMAtual { get; set; }
         public string IdcTipoManutencao { get; set; }
+        public string IdcRodizioPneu { get; set; }
+        public string IdcTrocaPneu { get; set; }
+        public string IdcTrocaOleo { get; set; }
         public DateTime DthEntrada { get; set; }
         public DateTime? DthSaida { get; set; }
         public string DscManutencao { get; set; }

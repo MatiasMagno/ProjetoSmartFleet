@@ -131,5 +131,18 @@ namespace SmartFleet.Service
              var msg = new Mensagem(Descricoes.MSG002, Tipo.Confirmacao);
             return msg;           
         }
+
+        public IEnumerable<Abastecimento> GetRelatorio(Abastecimento item) 
+        {
+            var items = GetAll(item)
+                .Select(x => new Abastecimento() 
+                {
+                    Veiculo = new Veiculo().UpdateValues(x.Veiculo),
+                    PessoaJuridica = new PessoaJuridica().UpdateValues(x.PessoaJuridica),
+                    TipoCombustivel = new TipoCombustivel().UpdateValues(x.TipoCombustivel)
+                }.UpdateValues(x));
+            
+            return items;
+        }
     }
 }

@@ -46,34 +46,35 @@ namespace SmartFleet.Controllers
         {
             try
             {         
-                parm.sColumns = parm.sColumns.Replace("veiculo.dscMarcaModelo","Veiculo.DscMarcaModelo");
-                parm.sColumns = parm.sColumns.Replace("seguradora.nomRazaoSocial","Seguradora.NomRazaoSocial");
-
                 SalvarPesquisa(item, parm);
-                var items = seguroService.GetAllByPage(item, parm);
-
-                 return Json(new
-                 {
-                     ok = true,
-                     sEcho = parm.sEcho,
-                     iTotalRecords = items.Count(),
-                     iTotalDisplayRecords = parm.totalRecords,
-                     aaData = items.Select(x => new
-                     {
-                         IdeSeguro = x.IdeSeguro,
-                         Veiculo = new { DscMarcaModelo = x.Veiculo.DscMarcaModelo },
-                         Seguradora = new { NomRazaoSocial = x.Seguradora.NomRazaoSocial },
-                         NumApolice = x.NumApolice,
-                         DatVigenciaInicio = x.DatVigenciaInicio.Value.ToString("dd/MM/yyyy"),
-                         DatVigenciaFim = x.DatVigenciaFim.Value.ToString("dd/MM/yyyy"),
-                         VlrFranquia = x.VlrFranquia.ToString("C")
-                     })
-                 });
+                var items = seguroService.GetAllByPage(item, parm).ToList();
+                return GetJsonGrid(parm, items);
             }
             catch (Exception ex)
             {
                 return Json(CreateMessageDatatable(ex));
             }
+        }
+
+        private JsonResult GetJsonGrid(DatatableParm parm, List<Seguro> items) 
+        {
+            return Json(new
+            {
+                ok = true,
+                sEcho = parm.sEcho,
+                iTotalRecords = items.Count(),
+                iTotalDisplayRecords = parm.totalRecords,
+                aaData = items.Select(x => new
+                {
+                    IdeSeguro = x.IdeSeguro,
+                    Veiculo = new { DscMarcaModelo = x.Veiculo.DscMarcaModelo },
+                    Seguradora = new { NomRazaoSocial = x.Seguradora.NomRazaoSocial },
+                    NumApolice = x.NumApolice,
+                    DatVigenciaInicio = x.DatVigenciaInicio.Value.ToString("dd/MM/yyyy"),
+                    DatVigenciaFim = x.DatVigenciaFim.Value.ToString("dd/MM/yyyy"),
+                    VlrFranquia = x.VlrFranquia.ToString("C")
+                })
+            });
         }
 
         public ActionResult Incluir()
@@ -156,7 +157,58 @@ namespace SmartFleet.Controllers
                 return Json(CreateMessageJson(ex));
             }
         }
-     
+
+        public ActionResult Relatorio() 
+        {
+            CarregarViewBag();
+            return View();
+        }
+        
+        [HttpPost]
+        public JsonResult Relatorio(DatatableParm parm, Seguro item) 
+        {
+            try
+            {         
+                SalvarPesquisa(item, parm);
+                var items = seguroService.GetAllByPage(item, parm).ToList();
+                return GetJsonGrid(parm, items);
+            }
+            catch (Exception ex)
+            {
+                return Json(CreateMessageDatatable(ex));
+            }
+        }
+        public ActionResult Imprimir() 
+        {
+            ViewBag.Titulo = "Relatório de Seguro";
+            ParamPesq pesq = BuscarPesquisa<Seguro>();
+            if (pesq != null)
+            {
+                var item = (Seguro)pesq.entity;
+                var items = seguroService.GetRelatorio(item).ToList();
+
+                var dscMarcaModelo = "";
+                var nomRazaoSocial = "";
+                if (item.IdeVeiculo > 0 || item.IdeSeguradora > 0) 
+                {
+                    var seguro = seguroService
+                    .GetAll(x => (item.IdeVeiculo > 0? x.IdeVeiculo == item.IdeVeiculo: true) &&
+                                (item.IdeSeguradora > 0? x.IdeSeguradora == item.IdeSeguradora: true))
+                    .FirstOrDefault();
+
+                    dscMarcaModelo = (seguro != null && item.IdeVeiculo > 0)? seguro.Veiculo.DscMarcaModelo: string.Empty;
+                    nomRazaoSocial = (seguro != null && item.IdeSeguradora > 0)? seguro.Seguradora.NomRazaoSocial: string.Empty;
+                }
+
+                ViewBag.DscMarcaModelo = dscMarcaModelo;
+                ViewBag.NomRazaoSocial = nomRazaoSocial;                
+                ViewBag.DatVigenciaInicio = item.DatVigenciaInicio.HasValue? item.DatVigenciaInicio.Value.ToString("dd/MM/yyyy"): string.Empty;
+                ViewBag.DatVigenciaFim = item.DatVigenciaFim.HasValue? item.DatVigenciaFim.Value.ToString("dd/MM/yyyy"): string.Empty;
+
+                return View(items);
+            }
+            return View();      
+        }
         private void CarregarViewBag() 
         {            
             var veiculo = veiculoService

@@ -80,6 +80,16 @@ namespace SmartFleet.Service
                 var msg = string.Format(Descricoes.MSG022, "CNPJ");
                 throw new CoreException(msg, CoreExceptionType.Alert);
             }
+
+            var pj = DbConnection.PessoaJuridica
+            .Where(x => x.NumCNPJ == item.NumCNPJ &&
+                        x.IdePessoaJuridica != item.IdePessoaJuridica)
+            .FirstOrDefault();
+
+            if (pj != null) {
+                throw new CoreException(Descricoes.MSG036, CoreExceptionType.Alert);
+            }
+
         }
         
         public void Save(PessoaJuridica item) 

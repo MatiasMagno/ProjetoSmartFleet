@@ -1,0 +1,72 @@
+@model List<SmartFleet.Domain.ViewModel.Abastecimento>;
+@{
+    Layout = "~/Views/Shared/_RelatorioHTML.cshtml";
+}
+<!doctype html>
+
+<head>
+
+</head>
+
+<body>
+    <form id="formRelatorio" class="form hide" role="form">
+        <section class="panel panel-default">
+            <article class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.Label("Posto de Abastecimento: ", null, new { @class = "control-label" })
+                            <span>@ViewBag.NomRazaoSocial</span>
+                        </div>
+                    </div>                      
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.Label("Veiculo: ", null, new { @class = "control-label" })
+                            <span>@ViewBag.DscMarcaModelo</span>
+                        </div>
+                    </div>                 
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group has-feedback">
+                            @Html.Label("Data de Abastecimento Início: ", null, new { @class = "control-label" }) 
+                            <span>@ViewBag.DatAbastecimentoInicio</span>
+                        </div>
+                    </div> 
+                    <div class="col-md-3">
+                        <div class="form-group has-feedback">
+                            @Html.Label("Data de Abastecimento Fim: ", null, new { @class = "control-label" })
+                            <span>@ViewBag.DatAbastecimentoFim</span>
+                        </div>
+                    </div> 
+                </div>
+                <br>
+                <div class="panel panel-default hide datatable table-responsive">
+                    <table class="table table-striped b-t b-light table-bordered table-hover datatable">
+                        <thead>
+                            <th>Posto de Abastecimento</th>
+                            <th>Veículo</th>
+                            <th>Data de Abastecimento</th>
+                            <th>Tipo de Combustível</th>
+                            <th>Qtde (Litros/kWh)</th>
+                            <th>Valor Total</th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                               <tr>
+                                   <td>@item.PessoaJuridica.NomRazaoSocial</td>
+                                   <td>@item.Veiculo.DscMarcaModelo</td>
+                                   <td>@item.DatAbastecimento.ToString("dd/MM/yyyy")</td>
+                                   <td>@item.TipoCombustivel.DscTipoCombustivel</td>
+                                   <td>@item.QtdAbastecimento</td>
+                                   <td>@item.VlrAbastecimento.ToString("C")</td>                               
+                               </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </form>
+</body>

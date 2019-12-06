@@ -34,7 +34,14 @@ namespace SmartFleet.Domain.Infraestrutura.Messages
         public const string MSG031 = "É necessário informar pelo menos um Tipo de Combustível.";
         public const string MSG032 = "Campo {0} não pode ser menor ou igual a {1}.";
         public const string MSG033 = "O campo {0} não pode ser maior ou igual ao campo {1}.";
-        public const string MSG034 = "O campo Data do Agendamento da viagem não pode ser superior a 4 horas.";
+        public const string MSG034 = "O campo Data do Agendamento da viagem não pode ser superior a 2 horas.";
+        public const string MSG035 = "O campo {0} não pode ser maior que o campo {1}.";
+        public const string MSG036 = "Já existe uma pessoa jurídica cadastrada com esse CNPJ.";
+         public const string MSG037 = "Já existe um colaborador cadastrado com essa matrícula.";
+        public const string MSG038 = "Já existe um colaborador cadastrado com esse CPF.";
+        public const string MSG039 = "Já existe um produto cadastrado com esse código.";
+        public const string MSG040 = "O campo Data de Agendamento não pode ser menor que a data e hora atual.";
+        public const string MSG041 = "O campo Início da Viagem não pode ser menor que a data do agendamento da solicitação.";
 
         public const string MSG099 = "Ocorreu um erro inesperado, favor verificar.";
     }

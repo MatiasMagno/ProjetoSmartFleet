@@ -9,6 +9,42 @@
     <section class="panel panel-default">
         <article class="panel-body">
             <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeVeiculo, new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdeVeiculo"
+                                name="IdeVeiculo"
+                                asp-for="IdeVeiculo" 
+                                asp-items="ViewBag.Veiculo">
+                            <option value="">Selecione</option>
+                        </select> 
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeColaborador, new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdeColaborador"
+                                name="IdeColaborador"
+                                asp-for="IdeColaborador" 
+                                asp-items="ViewBag.Mecanico">
+                            <option value="">Selecione</option>
+                        </select> 
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdcTipoManutencao, new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdcTipoManutencao"
+                                name="IdcTipoManutencao"
+                                asp-for="IdcTipoManutencao" 
+                                asp-items="ViewBag.TipoManutencao">
+                            <option value="">Selecione</option>
+                        </select> 
+                    </div>
+                </div>                               
 
             </div>
         </article>
@@ -29,8 +65,8 @@
                data-form-id="formPesquisar"
                data-object-id="ideManutencao"
                data-controller="Manutencao"
-               data-columns-data="ideManutencao"
-               data-columns-title="IdeManutenção">
+               data-columns-data="veiculo.dscMarcaModelo,colaborador.nomColaborador,idcTipoManutencao,dthEntrada,dthSaida"
+               data-columns-title="Veículo,Mecânico Responsável,Tipo de Manutenção,Entrada na Manutenção,Saída da Manutenção">
         </table>
     </div>
 </form>

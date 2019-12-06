@@ -24,6 +24,22 @@ namespace SmartFleet.Domain.ViewModel
         [Required(ErrorMessage = Descricoes.MSG006)]         
         public string IdcTipoManutencao { get; set; }
 
+        [Display(Name = "Quilometragem Atual")]
+        [Required(ErrorMessage = Descricoes.MSG006)]  
+        public int NumKMAtual { get; set; }
+
+        [Display(Name = "Rodízio de Penu")]
+        [Required(ErrorMessage = Descricoes.MSG006)]  
+        public string IdcRodizioPneu { get; set; }
+
+        [Display(Name = "Troca de Pneu")]
+        [Required(ErrorMessage = Descricoes.MSG006)]  
+        public string IdcTrocaPneu { get; set; }
+
+        [Display(Name = "Troca de Óleo")]
+        [Required(ErrorMessage = Descricoes.MSG006)] 
+        public string IdcTrocaOleo { get; set; }
+
         [Display(Name = "Entrada na Manutenção")]
         [Required(ErrorMessage = Descricoes.MSG006)] 
         public DateTime DthEntrada { get; set; }
@@ -48,7 +64,7 @@ namespace SmartFleet.Domain.ViewModel
         public string NumPlaca { get; set; }
 
         [Display(Name = "Matrícula")]
-        public string NumMatriculaMotorista { get; set; }        
+        public string NumMatriculaMecanico { get; set; }        
          
         #endregion
     }

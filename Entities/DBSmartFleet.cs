@@ -242,6 +242,21 @@ namespace SmartFleet.Entities
                     .HasMaxLength(1)
                     .IsUnicode(false);
 
+                entity.Property(e => e.IdcRodizioPneu)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IdcTrocaPneu)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false);   
+
+                entity.Property(e => e.IdcTrocaOleo)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false);                                     
+
                 entity.HasOne(d => d.Colaborador)
                     .WithMany(p => p.Manutencao)
                     .HasForeignKey(d => d.IdeColaborador)
@@ -522,7 +537,7 @@ namespace SmartFleet.Entities
             modelBuilder.Entity<UnidadeFederacao>(entity =>
             {
                 entity.HasKey(e => e.IdeUnidadeFederacao)
-                    .HasName("PK_UNIDADEFEDERACAO");
+                    .HasName("PK_UnidadeFederacao");
 
                 entity.Property(e => e.NomUnidadeFederacao)
                     .IsRequired()

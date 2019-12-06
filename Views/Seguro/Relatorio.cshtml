@@ -1,0 +1,140 @@
+@model SmartFleet.Domain.ViewModel.Seguro;
+@{
+    ViewBag.Title = "Pesquisar Relatório de Seguro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Current = " Relatórios / Seguro / Pesquisar";
+}
+
+<form id="formPesquisar" class="form" role="form">
+    <section class="panel panel-default">
+        <article class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeVeiculo, new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdeVeiculo"
+                                name="IdeVeiculo"
+                                asp-for="IdeVeiculo" 
+                                asp-items="ViewBag.Veiculo">
+                            <option value="">Selecione</option>
+                        </select> 
+                    </div>
+                </div>  
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.IdeSeguradora, new { @class = "control-label" })
+                        <select class="form-control" 
+                                id="IdeSeguradora"
+                                name="IdeSeguradora"
+                                asp-for="IdeSeguradora" 
+                                asp-items="ViewBag.Seguradora">
+                            <option value="">Selecione</option>
+                        </select> 
+                    </div>
+                </div>                 
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatVigenciaInicio, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DatVigenciaInicio, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div> 
+                <div class="col-md-3">
+                    <div class="form-group has-feedback">
+                        @Html.LabelFor(x => x.DatVigenciaFim, new { @class = "control-label" })
+                        @Html.TextBoxFor(x => x.DatVigenciaFim, null, new
+                        {
+                            @class = "form-control datePick",
+                            @data_language = "pt-BR",
+                            @data_mask = "99/99/9999",
+                            @Placeholder = "__/__/____",
+                            @data_date_format = "dd/mm/yyyy",
+                            @data_data_min_view_mode = "days",
+                            @data_date_start_view = "month",
+                            @data_date_start_date = String.Format("{0:dd/mm/yyyy}", DateTime.MinValue)
+                        })
+                        <span class="form-control-feedback datepicker-click" style="cursor:pointer"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div> 
+                <div class="col-md-3">
+                    @Html.Hidden("IdcSim", "N")
+                    @Html.Hidden("IdcNao", "N")                    
+                    <label class="control-label">Seguro Vigente</label>
+                    <div class="form-group">
+                        <div class="checkbox i-checks radio-inline">
+                            <label>
+                                @Html.TextBox("IdcSim1", null, new { @class = "checkbox-idc", @type = "checkbox", @chave="IdcSim" })
+                                <i></i>Sim
+                            </label>
+                        </div>
+                        <div class="checkbox i-checks radio-inline">
+                            <label>
+                                @Html.TextBox("IdcNao1", null, new { @class = "checkbox-idc", @type = "checkbox", @chave="IdcNao" })
+                                <i></i>Não
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>                  
+        </article>
+        <footer class="panel-footer">
+            <button type="button" class="btn btn-primary btnPesquisar"><i class="fa fa-search"></i> Pesquisar</button>
+            <button type="button" class="btn btn-default btn-reset-form" data-loading="false"><i class="fa fa-eraser"></i> Limpar</button>
+            <div class="pull-right">
+                <a href=@Url.Action("Imprimir", "Seguro") id="btnRelatorio" target="_blank" class="btn btn-s-md btn-success hide" data-loading="false"><i class="fa fa-file-excel-o"></i> Relatório</a>
+            </div>
+        </footer>
+    </section>
+</form>
+
+<!--Datatable Pesquisar-->
+<form id="form-result" class="form" role="form">
+    <div class="panel panel-default hide datatable table-responsive">
+        <table id="gridSeguro"
+               class="table table-striped b-t b-light table-bordered table-hover datatable"
+               data-crud="false"
+               data-form-id="formPesquisar"
+               data-object-id="ideSeguro"
+               data-controller="/Seguro/Relatorio"
+               data-function-column="onColumnGrid"
+               data-function-callback="onData"
+               data-columns-data="veiculo.dscMarcaModelo,seguradora.nomRazaoSocial,numApolice,datVigenciaInicio,datVigenciaFim,vlrFranquia"
+               data-columns-title="Veículo,Seguradora,Número da Apólice,Início da Vigência,Fim da Vigência,Valor Franquia">
+        </table>
+    </div>
+</form>
+
+@section customsJs {
+    <script type="text/javascript">
+
+        var validator = $( "#formPesquisar" ).validate();
+        validator.resetForm();
+
+        function onColumnGrid(data) 
+        {
+            //data.columns[0].width = "25%";
+            return data;            
+        }
+        function onData(data) 
+        {
+            $("#btnRelatorio").addClass("hide");
+            if (data.length > 0) {
+                $("#btnRelatorio").removeClass("hide");
+            }
+        }
+
+    </script>
+}

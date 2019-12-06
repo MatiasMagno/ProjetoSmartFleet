@@ -48,5 +48,12 @@ namespace SmartFleet.Domain.ViewModel
         public virtual Veiculo Veiculo { get; set; }
         public virtual PessoaJuridica Seguradora { get; set; }
 
+        #region Campos auxiliares
+
+        public string IdcSim { get; set; }
+        public string IdcNao { get; set; }
+
+        #endregion
+
     }
 }

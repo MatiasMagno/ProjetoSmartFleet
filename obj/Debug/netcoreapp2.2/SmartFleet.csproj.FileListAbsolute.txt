@@ -140,3 +140,12 @@ C:\Jadir\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Manutenc
 C:\Jadir\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Manutencao\Incluir.g.cshtml.cs
 D:\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Manutencao\Incluir.g.cshtml.cs
 D:\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Manutencao\Pesquisar.g.cshtml.cs
+c:\Jadir\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_RelatorioHTML.g.cshtml.cs
+D:\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_RelatorioHTML.g.cshtml.cs
+D:\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Seguro\Relatorio.g.cshtml.cs
+D:\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Seguro\Imprimir.g.cshtml.cs
+D:\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Manutencao\Alterar.g.cshtml.cs
+D:\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Abastecimento\Relatorio.g.cshtml.cs
+D:\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Abastecimento\Imprimir.g.cshtml.cs
+D:\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Transporte\Relatorio.g.cshtml.cs
+D:\Matias\Projetos\SmartFleet\obj\Debug\netcoreapp2.2\Razor\Views\Transporte\Imprimir.g.cshtml.cs

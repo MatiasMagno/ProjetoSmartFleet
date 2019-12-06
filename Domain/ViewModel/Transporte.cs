@@ -69,6 +69,8 @@ namespace SmartFleet.Domain.ViewModel
         [Display(Name = "Passageiro")]
         public string NomPassageiro { get; set; }
 
+        public string NomMotorista { get; set; }
+
         [Display(Name = "Matrícula")]
         public string NumMatriculaSolicitante { get; set; }
 
@@ -78,6 +80,9 @@ namespace SmartFleet.Domain.ViewModel
         [Display(Name = "Telefone Celular")]
         public string NumCelularMotorista { get; set; } 
 
+        [Display(Name = "Veículo")]
+        public string DscMarcaModelo { get; set; }
+
         [Display(Name = "Placa")]
         public string NumPlaca { get; set; }
 
@@ -85,7 +90,11 @@ namespace SmartFleet.Domain.ViewModel
         public DateTime? DthSolicitacaoInicio { get; set; }             
 
         [Display(Name = "Data do Agendamento Fim")]
-        public DateTime? DthSolicitacaoFim { get; set; }             
+        public DateTime? DthSolicitacaoFim { get; set; } 
+
+        [Display(Name = "Status da Viagem")]
+        public string IdcStatus { get; set; }
+        public string DscStatus { get; set; }         
 
         #endregion
     }

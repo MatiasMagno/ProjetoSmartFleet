@@ -34,6 +34,15 @@ namespace SmartFleet.Domain.Infraestrutura.Utility
             items.Add("P", "Preventiva");
             return items;
         }
+
+        public static Dictionary<string, string> BuscarStatusViagem()
+        {
+            Dictionary<string, string> items = new Dictionary<string, string>();
+            items.Add("1", "Aguardando Início da Viagem");
+            items.Add("2", "Viagem Iniciada");
+            items.Add("3", "Viagem Finalizada");
+            return items;
+        }        
         
     }
 
