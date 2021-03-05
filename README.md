@@ -1,2 +1,2 @@
 # SmartFleet
-Sistema web para gestão de frotas ultilizando C#
+Sistema web para gestão de frotas utilizando C#
